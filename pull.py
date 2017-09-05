@@ -53,8 +53,8 @@ def get_features():
         PLAYER_GAME_POINTS[player][gameid] = point
         PLAYER_GAME_TEAM[player][gameid] = team
         PLAYER_TEAM_GAME[player][team] = gameid
-        TEAM_GAME_PLAYERS[team][game] = set(list(TEAM_GAME_PLAYERS[team].get(game, [])) + [player])
-        GAME_TEAMS_PLAYERS[game][team] = set(list(GAME_TEAMS_PLAYERS[game].get(team, [])) + [player])
+        TEAM_GAME_PLAYERS[team][gameid] = set(list(TEAM_GAME_PLAYERS[team].get(gameid, [])) + [player])
+        GAME_TEAMS_PLAYERS[gameid][team] = set(list(GAME_TEAMS_PLAYERS[gameid].get(team, [])) + [player])
         if point == 1:
             GAME_TO_WINNING_TEAM[gameid] = team
         row = cursor.fetchone()
