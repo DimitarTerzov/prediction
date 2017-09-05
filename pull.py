@@ -49,7 +49,9 @@ def get_features():
     cursor = get_connection().cursor()
     cursor.execute(query)
     playerToWins = defaultdict(int)
-    while (player, team, game, date, point) = cursor.fetchone():
+    row = cursor.fetchone()
+    while row:
+        (player, team, game, date, point) = row
         gameid = "%s-%s" % (game, date)
         PLAYER_GAME_POINTS[player][gameid] = point
         PLAYER_GAME_TEAM[player][gameid] = team
@@ -58,7 +60,7 @@ def get_features():
         GAME_TEAMS_PLAYERS[game][team] set(list(GAME_TEAM_PLAYERS[game].get(team, [])) + [player])
         if point == 1:
             GAME_TO_WINNING_TEAM[gameid] = team
-
+        row = cursor.fetchone()
 
 def main():
     start = time.time()
