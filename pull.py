@@ -33,7 +33,7 @@ def get_features():
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
     cursor = cxn.cursor()
     print(query)
-    cursor.execute(query)
+    cursor.execute(str(query, 'utf-8'))
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
     while row:
