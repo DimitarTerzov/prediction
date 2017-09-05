@@ -25,15 +25,27 @@ GAME_TEAMS_PLAYERS = defaultdict(dict)
 GAME_TO_WINNING_TEAM = {}
 
 def get_features():
-    query = " ".join([
-        "SELECT TOP 100 PlayerId, TeamName, GameName, EventStartDate,",
-        "CASE WHEN (GamePlayedAsHomeTeam = 1 AND GameWonBy = 'Home')",
-        "OR (GamePlayedAsHomeTeam != 1 AND GameWonBy = 'Away') THEN 1 ELSE -1 END",
-        "FROM vwSeedionData"])
+    top = ""
+    if os.getenv("TOP_N"):
+        top = "TOP %s" % os.getenv("TOP_N")
+    query = """
+    SELECT
+        %s
+        PlayerId,
+        TeamName,
+        GameName,
+        convert(varchar, EventStartDate),
+        CASE WHEN (GamePlayedAsHomeTeam = 1 AND GameWonBy = 'Home')
+            OR (GamePlayedAsHomeTeam != 1 AND GameWonBy = 'Away')
+            THEN 1
+            ELSE -1
+        END
+    FROM vwSeedionData
+    """ % top
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
     cursor = cxn.cursor()
     print(query)
-    cursor.execute(str(query, 'utf-8'))
+    cursor.execute(query)
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
     while row:
