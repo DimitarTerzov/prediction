@@ -23,7 +23,6 @@ ODBC_DIRECTIVES = [
     "PWD=BQcACAADBgwACAcHBA4MBQ",
 ]
 
-PLAYER_GAME_POINTS = defaultdict(dict)
 PLAYER_GAME_TEAM = defaultdict(dict)
 PLAYER_TEAM_GAME = defaultdict(dict)
 TEAM_GAME_PLAYERS = defaultdict(dict)
@@ -61,7 +60,6 @@ def get_features():
     while row:
         (player, team, game, date, did_win, was_home_team, home_points, away_points) = row
         gameid = "%s-%s" % (game, date)
-        PLAYER_GAME_POINTS[player][gameid] = point
         PLAYER_GAME_TEAM[player][gameid] = team
         PLAYER_TEAM_GAME[player][team] = gameid
         TEAM_GAME_PLAYERS[team][gameid] = set(list(TEAM_GAME_PLAYERS[team].get(gameid, [])) + [player])
