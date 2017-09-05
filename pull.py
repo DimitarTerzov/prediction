@@ -51,6 +51,7 @@ def get_features():
     cursor.execute(query)
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
+    print(row)
     while row:
         (player, team, game, date, point) = row
         gameid = "%s-%s" % (game, date)
