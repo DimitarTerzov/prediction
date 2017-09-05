@@ -26,7 +26,7 @@ GAME_TO_WINNING_TEAM = {}
 
 def get_connection():
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
-    return connection
+    return cxn
 
 def get_features():
     top = ""
