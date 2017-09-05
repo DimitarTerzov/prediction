@@ -91,8 +91,8 @@ def build_features_and_classes():
     for game in games_ordered:
         for team in sorted(GAME_TO_TEAM_POINTS[game].keys()):
             game_teams_sorted.append((game, team))
-    raw_X = [game_features(game, team) for game, team in game_teams_sorted]
-    raw_Y = np.array(int(team == GAME_TO_WINNING_TEAM[game])for game, team in game_teams_sorted)
+    raw_X = [[game_features(game, team)] for game, team in game_teams_sorted]
+    raw_Y = [int(team == GAME_TO_WINNING_TEAM[game]) for game, team in game_teams_sorted)]
     hasher = FeatureHasher(input_type='pair')
     return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
