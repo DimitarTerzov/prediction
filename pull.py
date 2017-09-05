@@ -57,7 +57,7 @@ def get_features():
         PLAYER_GAME_TEAM[player][gameid] = team
         PLAYER_TEAM_GAME[player][team] = gameid
         TEAM_GAME_PLAYERS[team][game] = set(list(TEAM_GAME_PLAYERS[team].get(game, [])) + [player])
-        GAME_TEAMS_PLAYERS[game][team] set(list(GAME_TEAM_PLAYERS[game].get(team, [])) + [player])
+        GAME_TEAMS_PLAYERS[game][team] = set(list(GAME_TEAM_PLAYERS[game].get(team, [])) + [player])
         if point == 1:
             GAME_TO_WINNING_TEAM[gameid] = team
         row = cursor.fetchone()
