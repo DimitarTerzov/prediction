@@ -43,7 +43,7 @@ def get_features():
     FROM vwSeedionData
     """ % top
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
-    cursor = cxn().cursor()
+    cursor = cxn.cursor()
     print(query)
     cursor.execute(query)
     playerToWins = defaultdict(int)
