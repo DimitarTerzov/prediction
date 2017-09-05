@@ -47,6 +47,7 @@ def get_features():
     FROM vwSeedionData
     """ % top
     cursor = get_connection().cursor()
+    print(query)
     cursor.execute(query)
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
