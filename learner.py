@@ -92,7 +92,7 @@ def build_features_and_classes():
         for team in sorted(GAME_TO_TEAM_POINTS[game].keys()):
             game_teams_sorted.append((game, team))
     raw_X = np.array([game_features(game, team) for game, team in game_teams_sorted])
-    raw_Y = np.array([int(team == GAME_TO_WINNING_TEAM[game])for game, team in game_teams_sorted], ndmin=1)
+    raw_Y = np.array(int(team == GAME_TO_WINNING_TEAM[game])for game, team in game_teams_sorted)
     hasher = FeatureHasher(input_type='pair')
     return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
@@ -110,9 +110,7 @@ def main():
     print("Building models with 10-fold cross-validation")
     clf = LinearSVC(random_state=0)
     # todo: add precision, recall using custom scorer
-    print(X)
-    print(y)
-    print(cross_val_score(clf, X, y, scoring='f1', groups=10, n_jobs=-1))
+    print(cross_val_score(clf, X, y, scoring='f1', groups=2, n_jobs=-1))
     took3 = time.time() - took2
     print("Got data, took %.2f seconds" % took3)
 
