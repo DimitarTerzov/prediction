@@ -44,7 +44,6 @@ def get_features():
     """ % top
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
     cursor = cxn.cursor()
-    print(query)
     cursor.execute(query)
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
@@ -60,13 +59,47 @@ def get_features():
             GAME_TO_WINNING_TEAM[gameid] = team
         row = cursor.fetchone()
 
+
 def main():
     start = time.time()
     print("Getting data...")
     get_features()
     took = time.time() - start
     print("Got data, took %.2f seconds" % took)
-
+    tp = 0.0
+    tn = 0.0
+    fp = 0.0
+    fn = 0.0
+    for game in GAME_TEAMS_PLAYERS.keys():
+        scorer = []
+        for team in GAME_TEAMS_PLAYERS[game].keys():
+            total_score = 0
+            for player in GAME_TEAMS_PLAYERS[game][team]:
+                # lazy leave-one-out validation
+                total_score += sum(PLAYER_GAME_POINTS[player].values())
+                total_score -= PLAYER_GAME_POINTS[player][game]
+            scorer.append((team, total_score))
+            predicted_winner = sorted(scorer, reverse=True, key=x[1])[0][0]
+            if predicted_winner == GAME_TO_WINNING_TEAM[game]:
+                # correctly predicted the winner and the loser
+                tp += 1.0
+                tn += 1.0
+            else:
+                # incorreclty predicted the winner and the loser
+                fp += 1.0
+                fn += 1.0
+    precision = tp / (tp + fp)
+    recall = tp / (tp + fn)
+    true_negative_rate = tn / (tn + fp)
+    accuracy = (tp + tn) / (tp + tn + fp + fn)
+    fscore = 2 * ((precision * recall) / (precision + recall))
+    print("""
+Precision\t%.2f
+Recall\t%.2f
+True Neg\t%.2f
+Acc\t%.2f
+Fscore\t%.2f
+          """ % (precision, recall, true_negative_rate, accuracy, fscore))
 
 if __name__ == '__main__':
     main()
