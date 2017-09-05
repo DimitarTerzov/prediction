@@ -80,7 +80,7 @@ def main():
                 total_score -= PLAYER_GAME_POINTS[player][game]
             scorer.append((team, total_score))
             predicted_winner = sorted(scorer, reverse=True, key=lambda x: x[1])[0][0]
-            if predicted_winner == GAME_TO_WINNING_TEAM[game]:
+            if predicted_winner == GAME_TO_WINNING_TEAM.get(game, None):
                 # correctly predicted the winner and the loser
                 tp += 1.0
                 tn += 1.0
