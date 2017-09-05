@@ -105,6 +105,10 @@ def main():
     print("Got data, took %.2f seconds" % took1)
     print("Vectorizing features and classes...")
     X, y = build_features_and_classes()
+    print("X")
+    print(X)
+    print("y")
+    print(y)
     took2 = time.time() - took1
     print("Got data, took %.2f seconds" % took2)
     print("Building models with 10-fold cross-validation")
