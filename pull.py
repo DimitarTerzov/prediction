@@ -1,8 +1,8 @@
 from __future__ import print_function
 import pyodbc
 import os
+import time
 from collections import defaultdict
-from time import time
 
 """
 Usually you don't store this information in version control,
