@@ -84,7 +84,7 @@ def game_features(game, team):
     yield ("was_home", int(GAME_TO_HOME_TEAM[game] == team))
 
 def build_features_and_classes():
-    games_ordered = sorted(GAMES_TO_WINNING_TEAM.keys())
+    games_ordered = sorted(GAME_TO_WINNING_TEAM.keys())
     game_teams_sorted = []
     for game in games_ordered:
         for team in sorted(GAME_TO_TEAM_POINTS[game].keys()):
