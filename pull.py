@@ -24,10 +24,6 @@ TEAM_GAME_PLAYERS = defaultdict(dict)
 GAME_TEAMS_PLAYERS = defaultdict(dict)
 GAME_TO_WINNING_TEAM = {}
 
-def get_connection():
-    cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
-    return cxn
-
 def get_features():
     top = ""
     if os.getenv("TOP_N"):
@@ -46,12 +42,12 @@ def get_features():
         END
     FROM vwSeedionData
     """ % top
-    cursor = get_connection().cursor()
+    cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
+    cursor = cxn().cursor()
     print(query)
     cursor.execute(query)
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
-    print(row)
     while row:
         (player, team, game, date, point) = row
         gameid = "%s-%s" % (game, date)
