@@ -70,5 +70,5 @@ def main():
     print("Got data, took %.2f seconds" % took)
 
 
-if __NAME__ == '__MAIN__':
+if __name__ == '__MAIN__':
     main()
