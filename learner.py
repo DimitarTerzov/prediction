@@ -74,7 +74,7 @@ def get_features():
         row = cursor.fetchone()
 
 def game_features(game, team):
-    for curr_team, players in enum(GAME_TEAMS_PLAYERS[game]):
+    for curr_team, players in GAME_TEAMS_PLAYERS[game].items():
         if team == curr_team:
             yield ("team", team)
             yield ("team_player", player)
