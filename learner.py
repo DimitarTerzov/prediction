@@ -67,10 +67,10 @@ def get_features():
         if did_win:
             GAME_TO_WINNING_TEAM[gameid] = team
         if was_home_team:
-            GAME_TEAM_POINTS[gameid][team] = home_points
+            GAME_TO_TEAM_POINTS[gameid][team] = home_points
             GAME_TO_HOME_TEAM[gameid] = team
         else:
-            GAME_TEAM_POINTS[gameid][team] = away_points
+            GAME_TO_TEAM_POINTS[gameid][team] = away_points
         row = cursor.fetchone()
 
 def game_features(game, team):
