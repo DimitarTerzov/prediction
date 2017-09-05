@@ -30,7 +30,7 @@ def get_features():
         top = "TOP %s" % os.getenv("TOP_N")
     query = """
     SELECT
-        %s
+        TOP 100
         PlayerId,
         TeamName,
         GameName,
@@ -41,7 +41,7 @@ def get_features():
             ELSE -1
         END
     FROM vwSeedionData
-    """ % top
+    """
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
     cursor = cxn.cursor()
     print(query)
