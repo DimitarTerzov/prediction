@@ -91,13 +91,10 @@ def build_features_and_classes():
     for game in games_ordered:
         for team in sorted(GAME_TO_TEAM_POINTS[game].keys()):
             game_teams_sorted.append((game, team))
-    print("Game teams sorted is %d", len(game_teams_sorted))
     raw_X = [game_features(game, team) for game, team in game_teams_sorted]
-    print("Raw X is is %d", len(raw_X))
     raw_Y = [int(team == GAME_TO_WINNING_TEAM[game]) for game, team in game_teams_sorted]
-    print("Raw Y is is %d", len(raw_Y))
     hasher = FeatureHasher(input_type='pair')
-    return hasher.transform(raw_X), raw_Y
+    return hasher.fit_transform(raw_X, raw_Y), raw_Y
 
 
 def main():
