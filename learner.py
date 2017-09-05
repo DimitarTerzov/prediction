@@ -77,10 +77,12 @@ def game_features(game, team):
     for curr_team, players in GAME_TEAMS_PLAYERS[game].items():
         if team == curr_team:
             yield ("team", team)
-            yield ("team_player", player)
+            for player in players:
+                yield ("team_player", player)
         else:
             yield ("opponent", team)
-            yield ("opponent_player", player)
+            for player in players:
+                yield ("opponent_player", player)
     yield ("was_home", int(GAME_TO_HOME_TEAM[game] == team))
 
 def build_features_and_classes():
