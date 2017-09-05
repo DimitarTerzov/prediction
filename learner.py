@@ -94,7 +94,7 @@ def build_features_and_classes():
     raw_X = [game_features(game, team) for game, team in game_teams_sorted]
     raw_Y = [int(team == GAME_TO_WINNING_TEAM[game]) for game, team in game_teams_sorted]
     hasher = FeatureHasher(input_type='pair')
-    return hasher.fit_transform(raw_X, raw_Y), raw_Y
+    return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
 
 def main():
