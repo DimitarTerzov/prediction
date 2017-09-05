@@ -100,6 +100,8 @@ True Neg\t%.2f
 Acc\t%.2f
 Fscore\t%.2f
           """ % (precision, recall, true_negative_rate, accuracy, fscore))
+    overall_time = time.time() - start
+    print("Finished in %.2f seconds" % overall_time)
 
 if __name__ == '__main__':
     main()

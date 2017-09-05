@@ -1,4 +1,6 @@
-"""
+## Data Model
+
+```bash
 Output for  sp_help vwSeedionData;
 
 Column_name	Type	Computed	Length	Prec	Scale	Nullable	TrimTrailingBlanks	FixedLenNullInSource	Collation
@@ -23,4 +25,41 @@ GameHomeTeamPoints	tinyint	no	1	3    	0    	yes	(n/a)	(n/a)	NULL
 GameAwayTeamPoints	tinyint	no	1	3    	0    	yes	(n/a)	(n/a)	NULL
 GameIsForfeit	bit	no	1	     	     	no	(n/a)	(n/a)	NULL
 TeamFinalStanding	tinyint	no	1	3    	0    	no	(n/a)	(n/a)	NULL
-"""
+```
+
+
+## Baseline Heuristic
+
+The baseline heuristic is as follows:
+- Every player gets a point for every game they have played where the
+  team they were on won
+- Every player loses a point for every game they have played where the
+  team they were on lost
+
+For a given match:
+- Take all of the points for each member of a given team,
+  and sum them together
+- The team with the most points wins
+
+We implement leave-one-out cross-validation in this heuristic by
+simply subtracting the score a given player has for the game being
+evaluated.
+
+The code for this test lives in `heuristic.py`.
+
+Here's an example output of that test:
+
+```
+Getting data...
+Got data, took 198.35 seconds
+
+Precision	0.30
+Recall	0.30
+True Neg	0.30
+Acc	0.30
+Fscore	0.30
+```
+
+Interestingly, what this means for the data set is that betting
+*against* this heuristic gives you 70% accuracy in predicting the
+winning team of a match.
