@@ -145,7 +145,7 @@ def main():
     print("Got data, took %.2f seconds" % took2)
     print("Building models with 2-fold cross-validation (for now)")
     scores = cross_validate(
-        get_classifier(), X, y, scoring=['f1', 'precision', 'recall'], cv=2, n_jobs=4, verbose=1)
+        get_classifier(), X, y, scoring=['f1', 'precision', 'recall'], cv=2, verbose=1)
     for score_key in ['fit_time', 'score_time', 'test_f1', 'test_precision', 'test_recall']:
         print(score_key, np.mean(scores[score_key]))
     took3 = time.time() - start
