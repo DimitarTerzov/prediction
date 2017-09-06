@@ -8,7 +8,6 @@ from sklearn.kernel_approximation import RBFSampler
 from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import cross_val_score
-from sklearn.metrics import precision_recall_fscore_support, make_scorer
 from collections import defaultdict
 
 """
@@ -97,7 +96,6 @@ def build_features_and_classes():
     hasher = FeatureHasher(input_type='pair')
     return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
-
 def main():
     start = time.time()
     print("Getting data...")
@@ -111,8 +109,15 @@ def main():
     print("Building models with 10-fold cross-validation")
     clf = LinearSVC(random_state=0)
     # todo: add precision, recall using custom scorer
-    results = cross_val_score(clf, X, y, scoring=make_scorer(precision_recall_fscore_support), cv=10, n_jobs=-1)
-    print(results)
+    precision_results = cross_val_score(clf, X, y, scoring='precision', cv=10, n_jobs=-1)
+    print("Precision")
+    print(precision_results)
+    recall_results = cross_val_score(clf, X, y, scoring='recall', cv=10, n_jobs=-1)
+    print("Recall")
+    print(recall_results)
+    fscore_results = cross_val_score(clf, X, y, scoring='f1score', cv=10, n_jobs=-1)
+    print("Fscore")
+    print(fscore_results)
     took3 = time.time() - took2
     print("Got data, took %.2f seconds" % took3)
 
