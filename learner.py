@@ -38,6 +38,7 @@ GAME_TO_DIVISION = {}
 GAME_TO_GENDER = {}
 
 if os.getenv("WITH_PICKLE") == "1":
+    print("Unpickling")
     pickled = pickle.load(open('features.pickle', 'rb'))
     PLAYER_GAME_TEAM = pickled['PLAYER_GAME_TEAM']
     PLAYER_TEAM_GAME = pickled['PLAYER_TEAM_GAME']
@@ -135,7 +136,7 @@ def build_features_and_classes():
             game_teams_sorted.append((game, team))
     raw_X = [game_features(game, team) for game, team in game_teams_sorted]
     raw_Y = [int(team == GAME_TO_WINNING_TEAM[game]) for game, team in game_teams_sorted]
-    hasher = FeatureHasher(input_type='pair')
+    hasher = FeatureHasher(input_type='pair', alternate_sign=False)
     X_features = hasher.transform(raw_X)
 
     if os.getenv("WITH_MONTE_CARLO") == "1":
