@@ -98,13 +98,9 @@ def build_features_and_classes():
     return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
 
-originalclass = []
-predictedclass = []
 def accumulate_scoring(y_true, y_pred, **kwargs):
-    global originalclass, predictedclass
-    originalclass.extend(y_true)
-    predictedclass.extend(y_pred)
-    return 0 # who cares
+    classification_report(y_true, y_pred)
+    return 0 # only in it for the classificaiton report
 
 def main():
     global originalclass, predictedclass
@@ -121,8 +117,6 @@ def main():
     clf = LinearSVC(random_state=0)
     cross_val_score(
         clf, X, y, scoring=make_scorer(accumulate_scoring), cv=10, n_jobs=-1)
-    print(originalclass, predictedclass)
-    print(classification_report(originalclass, predictedclass))
     took3 = time.time() - took2
     print("Got data, took %.2f seconds" % took3)
 
