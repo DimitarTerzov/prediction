@@ -119,6 +119,7 @@ def main():
     clf = LinearSVC(random_state=0)
     cross_val_score(
         clf, X, y, scoring=make_scorer(accumulate_scoring), cv=10, n_jobs=-1)
+    print(originalclass, predictedclass)
     print(classification_report(originalclass, predictedclass))
     took3 = time.time() - took2
     print("Got data, took %.2f seconds" % took3)
