@@ -96,6 +96,8 @@ def build_features_and_classes():
     hasher = FeatureHasher(input_type='pair')
     return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
+def get_scorer
+
 
 def main():
     start = time.time()
@@ -105,17 +107,13 @@ def main():
     print("Got data, took %.2f seconds" % took1)
     print("Vectorizing features and classes...")
     X, y = build_features_and_classes()
-    print("X")
-    print(X)
-    print("y")
-    print(y)
     took2 = time.time() - took1
     print("Got data, took %.2f seconds" % took2)
     print("Building models with 10-fold cross-validation")
     clf = LinearSVC(random_state=0)
     # todo: add precision, recall using custom scorer
-    results = cross_val_score(clf, X, y, scoring='f1', cv=10, n_jobs=-1)
-    print("Average fscore: %.4f" % np.average(results))
+    results = cross_val_score(clf, X, y, scoring='precision_recall_fscore_support', cv=10, n_jobs=-1)
+    print(results)
     took3 = time.time() - took2
     print("Got data, took %.2f seconds" % took3)
 
