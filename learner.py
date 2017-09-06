@@ -101,8 +101,8 @@ def build_features_and_classes():
 originalclass = []
 predictedclass = []
 def accumulate_scoring(y_true, y_pred, **kwargs):
-    originalclass.extend(y_true)
-    predictedclass.extend(y_pred)
+    originalclass += y_true
+    predictedclass += y_pred
     return 0 # who cares
 
 def main():
