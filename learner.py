@@ -38,7 +38,7 @@ GAME_TO_DIVISION = {}
 GAME_TO_GENDER = {}
 
 if os.getenv("WITH_PICKLE") == "1":
-    pickled = pickle.load(open('features.pickle', 'r'))
+    pickled = pickle.load(open('features.pickle', 'rb'))
     PLAYER_GAME_TEAM = pickled['PLAYER_GAME_TEAM']
     PLAYER_TEAM_GAME = pickled['PLAYER_TEAM_GAME']
     TEAM_GAME_PLAYERS = pickled['TEAM_GAME_PLAYERS']
@@ -99,7 +99,7 @@ def get_features():
         GAME_TO_GENDER[gameid] = division_gender
         row = cursor.fetchone()
 
-    with open('features.picle', 'w') as fl:
+    with open('features.pickle', 'wb') as fl:
         pickled = {}
         pickled['PLAYER_GAME_TEAM'] = PLAYER_GAME_TEAM
         pickled['PLAYER_TEAM_GAME'] = PLAYER_TEAM_GAME
