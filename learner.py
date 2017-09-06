@@ -6,7 +6,7 @@ import numpy as np
 import pickle
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.kernel_approximation import RBFSampler
-from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import SGDClassifier, LogisticRegression
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
@@ -149,13 +149,15 @@ def accumulate_scoring(y_true, y_pred, **kwargs):
     print(classification_report(y_true, y_pred))
     return 0 # only in it for the classificaiton report
 
-def get_classifier():
-    if os.getenv("WITH_MONTE_CARLO") == "1":
+def get_classifier(name):
+    if name == "MONTE_CARLO":
         return SGDClassifier(verbose=1)
-    if os.getenv("WITH_RANDOM_FOREST") == "1":
+    if name == "RANDOM_FOREST":
         return RandomForestClassifier(verbose=1)
-    if os.getenv("WITH_NAIVE_BAYES") == "1":
+    if name == "NAIVE_BAYES":
         return MultinomialNB()
+    if name == "MAXENT":
+        return LogisticRegression(verbose=1)
     return LinearSVC(random_state=0, verbose=1)
 
 def main():
@@ -168,16 +170,27 @@ def main():
     print("Quick report on features, etc:")
     print("%d teams" % len(TEAM_GAME_PLAYERS.keys()))
     print("%d players" % len(PLAYER_GAME_TEAM.keys()))
+    print("%d games" % len(GAME_TO_HOME_TEAM.keys()))
     print("Vectorizing features and classes...")
     build_feature_start = time.time()
     X, y = build_features_and_classes()
     took2 = time.time() - build_feature_start
     print("Got data, took %.2f seconds" % took2)
-    print("Building models with 2-fold cross-validation (for now)")
-    scores = cross_validate(
-        get_classifier(), X, y, scoring=['f1', 'precision', 'recall'], cv=2, verbose=1)
-    for score_key in ['fit_time', 'score_time', 'test_f1', 'test_precision', 'test_recall']:
-        print(score_key, np.mean(scores[score_key]))
+    print("Building models with 10-fold cross-validation (for now)")
+
+    classifiers = ['MONTE_CARLO', 'RANDOM_FOREST', 'NAIVE_BAYES', 'MAXENT', 'SVM']
+    if os.getenv("CLASSIFIER"):
+        classifiers = [os.getenv("CLASSIFIER")]
+
+    for classifier in classifiers:
+        print("========================")
+        print("USING %s" % classifier)
+        scores = cross_validate(
+            get_classifier(classifier), X, y, scoring=['f1', 'precision', 'recall'],
+            cv=10, verbose=1, jobs=int(os.getenv("NUM_JOBS", "1")))
+        for score_key in ['fit_time', 'score_time', 'test_f1', 'test_precision', 'test_recall']:
+            print(score_key, "\t", np.mean(scores[score_key]))
+        print("========================")
     took3 = time.time() - start
     print("Took %.2f seconds total" % took3)
 
