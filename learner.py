@@ -151,12 +151,12 @@ def accumulate_scoring(y_true, y_pred, **kwargs):
 
 def get_classifier():
     if os.getenv("WITH_MONTE_CARLO") == "1":
-        return SGDClassifier()
+        return SGDClassifier(verbose=1)
     if os.getenv("WITH_RANDOM_FOREST") == "1":
-        return RandomForestClassifier()
+        return RandomForestClassifier(verbose=1)
     if os.getenv("WITH_NAIVE_BAYES") == "1":
-        return MultinomialNB()
-    return LinearSVC(random_state=0)
+        return MultinomialNB(verbose=1)
+    return LinearSVC(random_state=0, verbose=1)
 
 def main():
     global originalclass, predictedclass
