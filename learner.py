@@ -147,7 +147,7 @@ def main():
     scores = cross_validate(
         get_classifier(), X, y, scoring=['f1', 'precision', 'recall'], cv=2, n_jobs=4, verbose=1)
     for score_key in ['fit_time', 'score_time', 'test_f1', 'test_precision', 'test_recall']:
-        print np.mean(scores[score_key])
+        print(score_key, np.mean(scores[score_key]))
     took3 = time.time() - start
     print("Took %.2f seconds total" % took3)
 
