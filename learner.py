@@ -155,7 +155,7 @@ def get_classifier():
     if os.getenv("WITH_RANDOM_FOREST") == "1":
         return RandomForestClassifier(verbose=1)
     if os.getenv("WITH_NAIVE_BAYES") == "1":
-        return MultinomialNB(verbose=1)
+        return MultinomialNB()
     return LinearSVC(random_state=0, verbose=1)
 
 def main():
