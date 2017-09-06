@@ -31,6 +31,8 @@ GAME_TEAMS_PLAYERS = defaultdict(dict)
 GAME_TO_WINNING_TEAM = {}
 GAME_TO_HOME_TEAM = {}
 GAME_TO_TEAM_POINTS = defaultdict(dict)
+GAME_TO_DIVISION = {}
+GAME_TO_GENDER = {}
 
 def get_features():
     top = ""
@@ -50,7 +52,9 @@ def get_features():
         END as did_win,
         GamePlayedAsHomeTeam,
         GameHomeTeamPoints,
-        GameAwayTeamPoints
+        GameAwayTeamPoints,
+        DivisionName,
+        DivisionGender
     FROM vwSeedionData
     """ % top
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
@@ -59,7 +63,8 @@ def get_features():
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
     while row:
-        (player, team, game, date, did_win, was_home_team, home_points, away_points) = row
+        (player, team, game, date, did_win, was_home_team,
+         home_points, away_points, division_name, division_gender) = row
         gameid = "%s-%s" % (game, date)
         PLAYER_GAME_TEAM[player][gameid] = team
         PLAYER_TEAM_GAME[player][team] = gameid
@@ -72,6 +77,8 @@ def get_features():
             GAME_TO_HOME_TEAM[gameid] = team
         else:
             GAME_TO_TEAM_POINTS[gameid][team] = away_points
+        GAME_TO_DIVISION[gameid] = division_name
+        GAME_TO_GENDER[gameid] = division_gender
         row = cursor.fetchone()
 
 def game_features(game, team):
@@ -85,6 +92,8 @@ def game_features(game, team):
             for player in players:
                 yield ("opponent_player_%s" % player, 1)
     yield ("was_home", int(GAME_TO_HOME_TEAM.get(game, None) == team))
+    yield ("division_%s" % GAME_TO_DIVISION[game], 1)
+    yield ("gender_%s" % GAME_TO_GENDER[game], 1)
 
 def build_features_and_classes():
     games_ordered = sorted(GAME_TO_WINNING_TEAM.keys())
@@ -113,15 +122,16 @@ def main():
     print("%d teams" % len(TEAM_GAME_PLAYERS.keys()))
     print("%d players" % len(PLAYER_GAME_TEAM.keys()))
     print("Vectorizing features and classes...")
+    build_feature_start = time.time()
     X, y = build_features_and_classes()
-    took2 = time.time() - took1
+    took2 = time.time() - build_feature_start
     print("Got data, took %.2f seconds" % took2)
     print("Building models with 10-fold cross-validation")
     clf = LinearSVC(random_state=0)
     cross_val_score(
         clf, X, y, scoring=make_scorer(accumulate_scoring), cv=10, n_jobs=1)
-    took3 = time.time() - took2
-    print("Got data, took %.2f seconds" % took3)
+    took3 = time.time() - start
+    print("Took %.2f seconds total" % took3)
 
 if __name__ == '__main__':
     main()
