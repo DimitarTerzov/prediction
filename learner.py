@@ -114,7 +114,7 @@ def main():
     print("Building models with 10-fold cross-validation")
     clf = LinearSVC(random_state=0)
     # todo: add precision, recall using custom scorer
-    print(cross_val_score(clf, X, y, scoring='f1', groups=2, n_jobs=-1))
+    print(cross_val_score(clf, X, y, scoring='f1'))
     took3 = time.time() - took2
     print("Got data, took %.2f seconds" % took3)
 
