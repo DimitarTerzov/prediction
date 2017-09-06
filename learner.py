@@ -109,6 +109,9 @@ def main():
     get_features()
     took1 = time.time() - start
     print("Got data, took %.2f seconds" % took1)
+    print("Quick report on features, etc:")
+    print("%d teams" % len(TEAM_GAME_PLAYERS.keys()))
+    print("%d players" % len(PLAYER_GAME_POINTS.keys()))
     print("Vectorizing features and classes...")
     X, y = build_features_and_classes()
     took2 = time.time() - took1
