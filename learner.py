@@ -101,11 +101,13 @@ def build_features_and_classes():
 originalclass = []
 predictedclass = []
 def accumulate_scoring(y_true, y_pred, **kwargs):
+    global originalclass, predictedclass
     originalclass += y_true
     predictedclass += y_pred
     return 0 # who cares
 
 def main():
+    global originalclass, predictedclass
     start = time.time()
     print("Getting data...")
     get_features()
