@@ -37,11 +37,13 @@ GAME_TO_TEAM_POINTS = defaultdict(dict)
 GAME_TO_DIVISION = {}
 GAME_TO_GENDER = {}
 
+if os.getenv("WITH_PICKLE") == "1":
+    (PLAYER_GAME_TEAM, PLAYER_TEAM_GAME, TEAM_GAME_PLAYERS,
+     GAME_TEAMS_PLAYERS, GAME_TO_WINNING_TEAM, GAME_TO_HOME_TEAM,
+     GAME_TO_TEAM_POINTS, GAME_TO_DIVISION, GAME_TO_GENDER) = pickle.load('features.pickle')
+
 def get_features():
     if os.getenv("WITH_PICKLE") == "1":
-        (PLAYER_GAME_TEAM, PLAYER_TEAM_GAME, TEAM_GAME_PLAYERS,
-         GAME_TEAMS_PLAYERS, GAME_TO_WINNING_TEAM, GAME_TO_HOME_TEAM,
-         GAME_TO_TEAM_POINTS, GAME_TO_DIVISION, GAME_TO_GENDER) = pickle.load('features.pickle')
         return
 
     top = ""
