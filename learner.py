@@ -187,7 +187,7 @@ def main():
         print("USING %s" % classifier)
         scores = cross_validate(
             get_classifier(classifier), X, y, scoring=['f1', 'precision', 'recall'],
-            cv=10, verbose=1, jobs=int(os.getenv("NUM_JOBS", "1")))
+            cv=10, verbose=1, n_jobs=int(os.getenv("NUM_JOBS", "1")))
         for score_key in ['fit_time', 'score_time', 'test_f1', 'test_precision', 'test_recall']:
             print(score_key, "\t", np.mean(scores[score_key]))
         print("========================")
