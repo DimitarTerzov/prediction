@@ -102,8 +102,8 @@ originalclass = []
 predictedclass = []
 def accumulate_scoring(y_true, y_pred, **kwargs):
     global originalclass, predictedclass
-    originalclass += y_true
-    predictedclass += y_pred
+    originalclass.extend(y_true)
+    predictedclass.extend(y_pred)
     return 0 # who cares
 
 def main():
