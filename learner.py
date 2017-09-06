@@ -7,6 +7,8 @@ from sklearn.feature_extraction import FeatureHasher
 from sklearn.kernel_approximation import RBFSampler
 from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import classification_report, accuracy_score, make_scorer
 from collections import defaultdict
@@ -95,6 +97,7 @@ def game_features(game, team):
     yield ("division_%s" % GAME_TO_DIVISION[game], 1)
     yield ("gender_%s" % GAME_TO_GENDER[game], 1)
 
+
 def build_features_and_classes():
     games_ordered = sorted(GAME_TO_WINNING_TEAM.keys())
     game_teams_sorted = []
@@ -104,12 +107,26 @@ def build_features_and_classes():
     raw_X = [game_features(game, team) for game, team in game_teams_sorted]
     raw_Y = [int(team == GAME_TO_WINNING_TEAM[game]) for game, team in game_teams_sorted]
     hasher = FeatureHasher(input_type='pair')
-    return hasher.transform(raw_X), raw_Y
+    X_features = hasher.transform(raw_X)
+
+    if os.getenv("WITH_MONTE_CARLO") == "1"
+         X_features = rbf_feature.fit_transform(X_features)
+
+    return X_features, raw_Y
 
 
 def accumulate_scoring(y_true, y_pred, **kwargs):
     print(classification_report(y_true, y_pred))
     return 0 # only in it for the classificaiton report
+
+def get_classifier():
+    if os.getenv("WITH_MONTE_CARLO") == "1"
+        return SGDClassifier()
+    if os.getenv("WITH_RANDOM_FOREST") == "1"
+        return RandomForestClassifier()
+    if os.getenv("WITH_NAIVE_BAYES") == "1"
+        return GaussianNB()
+    return LinearSVC(random_state=0)
 
 def main():
     global originalclass, predictedclass
@@ -126,10 +143,9 @@ def main():
     X, y = build_features_and_classes()
     took2 = time.time() - build_feature_start
     print("Got data, took %.2f seconds" % took2)
-    print("Building models with 10-fold cross-validation")
-    clf = LinearSVC(random_state=0)
+    print("Building models with 1-fold cross-validation (for now)")
     cross_val_score(
-        clf, X, y, scoring=make_scorer(accumulate_scoring), cv=10, n_jobs=1)
+        get_classifier(), X, y, scoring=make_scorer(accumulate_scoring), cv=1, n_jobs=-1)
     took3 = time.time() - start
     print("Took %.2f seconds total" % took3)
 
