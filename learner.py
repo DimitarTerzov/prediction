@@ -96,8 +96,6 @@ def build_features_and_classes():
     hasher = FeatureHasher(input_type='pair')
     return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
-def get_scorer
-
 
 def main():
     start = time.time()
