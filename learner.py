@@ -52,7 +52,6 @@ def get_features():
         GameHomeTeamPoints,
         GameAwayTeamPoints
     FROM vwSeedionData
-    WHERE DivisionGender = 'Male'
     """ % top
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
     cursor = cxn.cursor()
@@ -95,7 +94,7 @@ def build_features_and_classes():
             game_teams_sorted.append((game, team))
     raw_X = [game_features(game, team) for game, team in game_teams_sorted]
     raw_Y = [int(team == GAME_TO_WINNING_TEAM[game]) for game, team in game_teams_sorted]
-    hasher = FeatureHasher(n_features=7000000, input_type='pair', alternate_sign=False)
+    hasher = FeatureHasher(input_type='pair')
     return hasher.transform(raw_X), raw_Y
 
 
