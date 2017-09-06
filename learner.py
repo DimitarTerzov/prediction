@@ -77,13 +77,13 @@ def get_features():
 def game_features(game, team):
     for curr_team, players in GAME_TEAMS_PLAYERS[game].items():
         if team == curr_team:
-            yield ("team", team)
+            yield ("team_%s" % team, 1)
             for player in players:
-                yield ("team_player", player)
+                yield ("team_player_%s" % player, 1)
         else:
-            yield ("opponent", team)
+            yield ("opponent_%s" % team, 1)
             for player in players:
-                yield ("opponent_player", player)
+                yield ("opponent_player_%s" % player, 1)
     yield ("was_home", int(GAME_TO_HOME_TEAM.get(game, None) == team))
 
 def build_features_and_classes():
@@ -95,7 +95,7 @@ def build_features_and_classes():
     raw_X = [game_features(game, team) for game, team in game_teams_sorted]
     raw_Y = [int(team == GAME_TO_WINNING_TEAM[game]) for game, team in game_teams_sorted]
     hasher = FeatureHasher(input_type='pair')
-    return hasher.transform(raw_X).toarray(), raw_Y
+    return hasher.transform(raw_X)).toarray(), raw_Y
 
 
 def accumulate_scoring(y_true, y_pred, **kwargs):
