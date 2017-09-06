@@ -8,6 +8,7 @@ from sklearn.kernel_approximation import RBFSampler
 from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import classification_report, accuracy_score, make_scorer
 from collections import defaultdict
 
 """
@@ -96,6 +97,11 @@ def build_features_and_classes():
     hasher = FeatureHasher(input_type='pair')
     return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
+
+def classification_report_with_accuracy_score(y_true, y_pred, **kwargs):
+    print classification_report(y_true, y_pred) # print classification report
+    return accuracy_score(y_true, y_pred) # return accuracy score
+
 def main():
     start = time.time()
     print("Getting data...")
@@ -108,16 +114,8 @@ def main():
     print("Got data, took %.2f seconds" % took2)
     print("Building models with 10-fold cross-validation")
     clf = LinearSVC(random_state=0)
-    # todo: add precision, recall using custom scorer
-    precision_results = cross_val_score(clf, X, y, scoring='precision', cv=10, n_jobs=-1)
-    print("Precision")
-    print(precision_results)
-    recall_results = cross_val_score(clf, X, y, scoring='recall', cv=10, n_jobs=-1)
-    print("Recall")
-    print(recall_results)
-    fscore_results = cross_val_score(clf, X, y, scoring='f1score', cv=10, n_jobs=-1)
-    print("Fscore")
-    print(fscore_results)
+    cross_val_score(
+        clf, X, y, scoring=make_scorer(classification_report_with_accuracy_score, cv=10, n_jobs=-1)
     took3 = time.time() - took2
     print("Got data, took %.2f seconds" % took3)
 
