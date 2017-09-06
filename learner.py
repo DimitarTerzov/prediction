@@ -52,6 +52,7 @@ def get_features():
         GameHomeTeamPoints,
         GameAwayTeamPoints
     FROM vwSeedionData
+    WHERE DivsionGender = 'Male'
     """ % top
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
     cursor = cxn.cursor()
