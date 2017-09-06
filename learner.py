@@ -9,7 +9,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import cross_validate
 from sklearn.metrics import classification_report, accuracy_score, make_scorer
 from collections import defaultdict
 
@@ -143,9 +143,11 @@ def main():
     X, y = build_features_and_classes()
     took2 = time.time() - build_feature_start
     print("Got data, took %.2f seconds" % took2)
-    print("Building models with 1-fold cross-validation (for now)")
-    cross_val_score(
-        get_classifier(), X, y, scoring=make_scorer(accumulate_scoring), cv=1, n_jobs=-1)
+    print("Building models with 2-fold cross-validation (for now)")
+    scores = cross_validate(
+        get_classifier(), X, y, scoring=['f1', 'precision', 'recall'], cv=2, n_jobs=4, verbose=1)
+    for score_key in ['fit_time', 'score_time', 'test_f1', 'test_precision', 'test_recall']:
+        print np.mean(scores[score_key])
     took3 = time.time() - start
     print("Took %.2f seconds total" % took3)
 
