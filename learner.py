@@ -38,9 +38,16 @@ GAME_TO_DIVISION = {}
 GAME_TO_GENDER = {}
 
 if os.getenv("WITH_PICKLE") == "1":
-    (PLAYER_GAME_TEAM, PLAYER_TEAM_GAME, TEAM_GAME_PLAYERS,
-     GAME_TEAMS_PLAYERS, GAME_TO_WINNING_TEAM, GAME_TO_HOME_TEAM,
-     GAME_TO_TEAM_POINTS, GAME_TO_DIVISION, GAME_TO_GENDER) = pickle.load(open('features.pickle', 'r'))
+    pickled = pickle.load(open('features.pickle', 'r'))
+    PLAYER_GAME_TEAM = pickled['PLAYER_GAME_TEAM']
+    PLAYER_TEAM_GAME = pickled['PLAYER_TEAM_GAME']
+    TEAM_GAME_PLAYERS = pickled['TEAM_GAME_PLAYERS']
+    GAME_TEAMS_PLAYERS = pickled['GAME_TEAMS_PLAYERS']
+    GAME_TO_WINNING_TEAM = pickled['GAME_TO_WINNING_TEAM']
+    GAME_TO_HOME_TEAM = pickled['GAME_TO_HOME_TEAM']
+    GAME_TO_TEAM_POINTS = pickled['GAME_TO_TEAM_POINTS']
+    GAME_TO_DIVISION = pickled['GAME_TO_DIVISION']
+    GAME_TO_GENDER = pickled['GAME_TO_GENDER']
 
 def get_features():
     if os.getenv("WITH_PICKLE") == "1":
@@ -93,9 +100,17 @@ def get_features():
         row = cursor.fetchone()
 
     with open('features.picle', 'w') as fl:
-        pickle.dump((PLAYER_GAME_TEAM, PLAYER_TEAM_GAME, TEAM_GAME_PLAYERS,
-         GAME_TEAMS_PLAYERS, GAME_TO_WINNING_TEAM, GAME_TO_HOME_TEAM,
-         GAME_TO_TEAM_POINTS, GAME_TO_DIVISION, GAME_TO_GENDER), fl)
+        pickled = {}
+        pickled['PLAYER_GAME_TEAM'] = PLAYER_GAME_TEAM
+        pickled['PLAYER_TEAM_GAME'] = PLAYER_TEAM_GAME
+        pickled['TEAM_GAME_PLAYERS'] = TEAM_GAME_PLAYERS
+        pickled['GAME_TEAMS_PLAYERS'] = GAME_TEAMS_PLAYERS
+        pickled['GAME_TO_WINNING_TEAM'] = GAME_TO_WINNING_TEAM
+        pickled['GAME_TO_HOME_TEAM'] = GAME_TO_HOME_TEAM
+        pickled['GAME_TO_TEAM_POINTS'] = GAME_TO_TEAM_POINTS
+        pickled['GAME_TO_DIVISION'] = GAME_TO_DIVISION
+        pickled['GAME_TO_GENDER'] = GAME_TO_GENDER
+        pickle.dump(pickled, fl)
 
 def game_features(game, team):
     for curr_team, players in GAME_TEAMS_PLAYERS[game].items():
