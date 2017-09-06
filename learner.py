@@ -109,7 +109,7 @@ def build_features_and_classes():
     hasher = FeatureHasher(input_type='pair')
     X_features = hasher.transform(raw_X)
 
-    if os.getenv("WITH_MONTE_CARLO") == "1"
+    if os.getenv("WITH_MONTE_CARLO") == "1":
          X_features = rbf_feature.fit_transform(X_features)
 
     return X_features, raw_Y
@@ -120,11 +120,11 @@ def accumulate_scoring(y_true, y_pred, **kwargs):
     return 0 # only in it for the classificaiton report
 
 def get_classifier():
-    if os.getenv("WITH_MONTE_CARLO") == "1"
+    if os.getenv("WITH_MONTE_CARLO") == "1":
         return SGDClassifier()
-    if os.getenv("WITH_RANDOM_FOREST") == "1"
+    if os.getenv("WITH_RANDOM_FOREST") == "1":
         return RandomForestClassifier()
-    if os.getenv("WITH_NAIVE_BAYES") == "1"
+    if os.getenv("WITH_NAIVE_BAYES") == "1":
         return GaussianNB()
     return LinearSVC(random_state=0)
 
