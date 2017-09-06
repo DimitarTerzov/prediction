@@ -84,7 +84,7 @@ def game_features(game, team):
             yield ("opponent", team)
             for player in players:
                 yield ("opponent_player", player)
-    yield ("was_home", int(GAME_TO_HOME_TEAM[game] == team))
+    yield ("was_home", int(GAME_TO_HOME_TEAM.get(game, None) == team))
 
 def build_features_and_classes():
     games_ordered = sorted(GAME_TO_WINNING_TEAM.keys())
@@ -98,8 +98,11 @@ def build_features_and_classes():
     return hasher.fit_transform(raw_X, raw_Y).toarray(), raw_Y
 
 
-def classification_report_with_accuracy_score(y_true, y_pred, **kwargs):
-    print(classification_report(y_true, y_pred)) # print classification report
+originalclass = []
+predictedclass = []
+def accumulate_scoring(y_true, y_pred, **kwargs):
+    originalclass.extend(y_true)
+    predictedclass.extend(y_pred)
     return 0 # who cares
 
 def main():
@@ -115,7 +118,8 @@ def main():
     print("Building models with 10-fold cross-validation")
     clf = LinearSVC(random_state=0)
     cross_val_score(
-        clf, X, y, scoring=make_scorer(classification_report_with_accuracy_score), cv=10, n_jobs=-1)
+        clf, X, y, scoring=make_scorer(accumulate_scoring), cv=10, n_jobs=-1)
+    print(classification_report(originalclass, predictedclass))
     took3 = time.time() - took2
     print("Got data, took %.2f seconds" % took3)
 
