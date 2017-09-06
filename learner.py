@@ -96,7 +96,7 @@ def build_features_and_classes():
     raw_X = [game_features(game, team) for game, team in game_teams_sorted]
     raw_Y = [int(team == GAME_TO_WINNING_TEAM[game]) for game, team in game_teams_sorted]
     hasher = FeatureHasher(n_features=7000000, input_type='pair', alternate_sign=False)
-    return hasher.transform(raw_X).toarray(), raw_Y
+    return hasher.transform(raw_X), raw_Y
 
 
 def accumulate_scoring(y_true, y_pred, **kwargs):
