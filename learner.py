@@ -3,11 +3,12 @@ import pyodbc
 import os
 import time
 import numpy as np
+import pickle
 from sklearn.feature_extraction import FeatureHasher
 from sklearn.kernel_approximation import RBFSampler
 from sklearn.linear_model import SGDClassifier
 from sklearn.svm import LinearSVC
-from sklearn.naive_bayes import GaussianNB
+from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import classification_report, accuracy_score, make_scorer
@@ -37,6 +38,12 @@ GAME_TO_DIVISION = {}
 GAME_TO_GENDER = {}
 
 def get_features():
+    if os.getenv("WITH_PICKLE") == "1":
+        (PLAYER_GAME_TEAM, PLAYER_TEAM_GAME, TEAM_GAME_PLAYERS,
+         GAME_TEAMS_PLAYERS, GAME_TO_WINNING_TEAM, GAME_TO_HOME_TEAM,
+         GAME_TO_TEAM_POINTS, GAME_TO_DIVISION, GAME_TO_GENDER) = pickle.load('features.pickle')
+        return
+
     top = ""
     if os.getenv("TOP_N"):
         top = "TOP %s" % os.getenv("TOP_N")
@@ -83,6 +90,10 @@ def get_features():
         GAME_TO_GENDER[gameid] = division_gender
         row = cursor.fetchone()
 
+    pickle.dump((PLAYER_GAME_TEAM, PLAYER_TEAM_GAME, TEAM_GAME_PLAYERS,
+     GAME_TEAMS_PLAYERS, GAME_TO_WINNING_TEAM, GAME_TO_HOME_TEAM,
+     GAME_TO_TEAM_POINTS, GAME_TO_DIVISION, GAME_TO_GENDER), 'features.pickle')
+
 def game_features(game, team):
     for curr_team, players in GAME_TEAMS_PLAYERS[game].items():
         if team == curr_team:
@@ -125,7 +136,7 @@ def get_classifier():
     if os.getenv("WITH_RANDOM_FOREST") == "1":
         return RandomForestClassifier()
     if os.getenv("WITH_NAIVE_BAYES") == "1":
-        return GaussianNB()
+        return MultinomialNB()
     return LinearSVC(random_state=0)
 
 def main():
