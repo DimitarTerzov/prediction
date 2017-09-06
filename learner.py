@@ -99,7 +99,7 @@ def build_features_and_classes():
 
 
 def accumulate_scoring(y_true, y_pred, **kwargs):
-    classification_report(y_true, y_pred)
+    print(classification_report(y_true, y_pred))
     return 0 # only in it for the classificaiton report
 
 def main():
