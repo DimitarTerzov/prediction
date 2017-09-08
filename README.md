@@ -1,7 +1,15 @@
+# A Survey of Learning Models for Predicting the Outcome of Basketball Match-Ups
+
+This README outlines the machine learning approach taken to
+predict the winner of a 3x3 basketball match-up given historical
+player data.
+
 ## Data Model
 
+The following data was made available in an Azure MSSQL database instance:
+
 ```bash
-Output for  sp_help vwSeedionData;
+sp_help vwSeedionData;
 
 Column_name	Type	Computed	Length	Prec	Scale	Nullable	TrimTrailingBlanks	FixedLenNullInSource	Collation
 PlayerId	uniqueidentifier	no	16	     	     	no	(n/a)	(n/a)	NULL
@@ -27,6 +35,10 @@ GameIsForfeit	bit	no	1	     	     	no	(n/a)	(n/a)	NULL
 TeamFinalStanding	tinyint	no	1	3    	0    	no	(n/a)	(n/a)	NULL
 ```
 
+Some basic statistics on the data:
+* 112,061 teams
+* 369,324 players
+* 161,162 games
 
 ## Baseline Heuristic
 
@@ -181,13 +193,68 @@ the set of the features, with each acting as a dimension in this space.
 SVMs are another tool that are popular in spaces with
 significant dimensionality.
 
+#### Neural Network
+
+Neural networks are a class of predictors that can use non-linear
+functions to predict the outcome of a specific event. These learners
+are popular in applications such as computer vision. They are designed
+to automatically infer rules that inform the outcome for a given
+set of features. The specific implementation we tested was a
+Multi-Layered Perceptron Classifier (MLP).
+
+### Results
+
 | Method | Fit Time | Score Time | Precision | Recall | F-Score |
 | ------ | --------:| ----------:| ---------:|-------:|--------:|
+| Heuristic | N/A   | N/A        | 30        | 30     |   30    |
+| Heuristic^-1 | N/A  | N/A      | 70        | 70     | 70      |
 | SGD    | 3.3      | 0.12       | 54.94     | 44.0   | 48.32   |
 | Random Forest | 16203.3 | 284.99  | 49.27  | 39.4   | 43.22   |
 | Naive Bayes | 6.2  | 0.68      | 35.72     | 87.11  | 50.4    |
 | Logistic Regression | 0.49 | 0.50 | 57.85 | 42.78 | 48.83 |
 | SVM | 1267.48 | 0.47 | 46.53 | 54.1 | 49.6 |
+| Neural Network | 529.83 | 0.37 | 47.4 | 69.6 | 56.3 |
 
 *Times are in seconds. Values are averages over ten-fold cross validation.
  Precision, recall, and f-score are expressed as percentages.*
+
+
+### Conclusion and Future Work
+It appears that given the source data, the inverse approach of our
+baseline heuristic remains unreasonably effective with an F-Score of 70%.
+
+The best-performing machine learning model is the Naive Bayes implementation,
+which performs roughly as well as a coin flip.
+
+Some research into
+[existing work in the field of machine learning for
+basketball](https://www.researchgate.net/publication/257749099_Predicting_college_basketball_match_outcomes_using_machine_learning_techniques_some_results_and_lessons_learned)
+has some observations that I believe may provide suggestions for
+improving the outcomes of the learning models. These observations
+include that using seasonal data to improve feature selection
+may provide some performance improvement, while the choice of a given
+machine learning model may not necessarily have a strong impact.
+Notable as well is that the state of the art in using machine
+learning to predict winners for basketball has so far only been
+roughly *75% effective*, which means a significant investment in
+feature selection for an increasingly diminishing return.
+
+
+## Replicating the Results
+
+```bash
+# from the server hosting the code
+$ cd ~/seedion
+
+# enters the pipenv virtual environment
+$ pipenv shell
+
+# calculates the heuristic and outputs a report
+# takes about five minutes, mostly from pulling data from the DB
+$ python3 heuristic.py
+
+# runs learners using pickled data from DB to speed things up
+# You can remove the WITH_PICKLE=1 to re-query from the DB
+# You can specify a classifier using, for example, CLASSIFIER=NAIVE_BAYES
+$ WITH_PICKLE=1 NUM_JOBS=8 python3 learner.py
+```
