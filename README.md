@@ -63,3 +63,131 @@ Fscore	0.30
 Interestingly, what this means for the data set is that betting
 *against* this heuristic gives you 70% accuracy in predicting the
 winning team of a match.
+
+## Using Machine Learning
+
+Determining whether a team will win or lose when playing against
+another team can be considered a form of binary classification.
+For each match-up, we generate two instances to learn or test against.
+*Instance A* will be the first team, and *Instance B* will be the second team.
+We will apply a class of 1 if a given instance denotes the team that
+wins the match-up, and 0 if the instance denotes the team that loses.
+
+The goal of a successful classifier is to therefore determine
+whether a team will win a match-up given the other team.
+The classifier will use features extracted from each match-up to
+train each learning model.
+
+### Base features
+
+The following features are defined as a baseline set:
+
+* Name of Team
+* Name of Opposing Team
+* Players on Team
+* Players on Opposing Team
+* Whether the Game was a Home Game
+* Division Name
+* Gender of Division
+
+Features are initially expressed as binary values.
+In instances where there are multiple values, the feature is transformed
+as in the following pseudocode example:
+
+```
+Players = ['joe', 'mike', 'bob']
+Team = 'Team 1'
+Opposing Team = 'Team 2'
+Features = {
+  'team_Team 1': 1,
+  'opposing_team_Team 2': 1,
+  'player_joe': 1,
+  'player_bob': 1,
+  'player_mike': 1
+}
+```
+
+When a feature set is calculated from this, we introduce a highly
+dimensional feature set. This would generate a sparse matrix with a
+size too large to fit into memory for most machines. To accommodate
+this high dimensionality, we use the
+[hashing trick](https://en.wikipedia.org/wiki/Feature_hashing)
+to dynamically compute the representation of a feature during learning
+to reduce memory and improve learning performance.
+
+### Models Evaluated
+
+Models are evaluated using
+[ten-fold cross-validation](https://en.wikipedia.org/wiki/Cross-validation_(statistics)#k-fold_cross-validation).
+This evaluates performance by training on 90% of the data,
+and testing on the withheld 10%.
+This is done ten times, all with the same folds, alternating the training
+sets and testing set each time.
+
+#### Stochastic Gradient Descent (SGD) Classifier with RBF Feature Transform (with Monte Carlo methods)
+
+The [SGD Classifier](http://scikit-learn.org/stable/modules/generated/sklearn.linear_model.SGDClassifier.html)
+is a linear model that is suitable for scaling to large data sets with a large
+number of features.
+
+For this classifier, we apply kernel approximation to our hashed features
+using the [Radial Basis Function Kernel](http://scikit-learn.org/stable/modules/kernel_approximation.html#rbf-kernel-approx).
+This uses Monte Carlo methods to transform feature data in a way that
+improves the speed of learning with minimal cost to the reliability of
+the features.
+
+#### Random Forest
+
+Random Forest is a kind of
+[ensemble learning](https://en.wikipedia.org/wiki/Ensemble_learning) approach
+that builds out numerous randomized decision trees.
+
+Ensemble learning is generally successful by smoothing a diverse
+range of hypothesis against a data set into a well-rounded solution.
+
+#### Naive Bayes
+
+[Naive Bayes](https://en.wikipedia.org/wiki/Naive_Bayes_classifier)
+is a simple classifier that uses
+prior probabilities of observed features for a given outcome.
+It applies the joint probabilities of all observed features to
+predict the class for a given instance.
+
+While relatively unsophisticated, it provides a solid "bang for the buck"
+in terms of speed and performance. However, it assumes that features
+are independent, which is not necessarily the case in our scenario.
+
+#### Logistic Regression
+
+Logistic Regression, also known as Maximum Entropy, is a form
+of [regression analysis](https://en.wikipedia.org/wiki/Regression_analysis)
+that applies probabilistic learning to the problem of binary classification.
+
+While logistic regression is similar to Naive Bayes in that is estimating
+the probability of a class given a set of features, these probabilities
+are calculated in such a way that is robust against features that
+correlate, or are otherwise not necessarily independent.
+
+#### Support Vector Machines (SVM)
+
+Support Vector Machines are a kind of linear model that attempt to
+separates a class definition from another class definition --
+in this case, a "win" vs a "loss" --
+by defining a hypothesis as a hyperplane in N-dimenstional space.
+
+The dimensions of the space are generally an enumeration of
+the set of the features, with each acting as a dimension in this space.
+
+SVMs are another tool that are popular in spaces with
+significant dimensionality.
+
+| Method | Fit Time | Score Time | Precision | Recall | F-Score |
+| ------ | --------:| ----------:| ---------:|-------:|--------:|
+| SGD    | 3.3      | 0.12       | 54.94     | 44.0   | 48.32   |
+| Random Forest | 16203.3 | 284.99  | 49.27  | 39.4   | 43.22   |
+| Naive Bayes | 6.2  | 0.68      | 35.72     | 87.11  | 50.4    |
+| Logistic Regression | 0.49 | 0.50 | 57.85 | 42.78 | 48.83 |
+| SVM | 1267.48 | 0.47 | 46.53 | 54.1 | 49.6 |
+
+*Times are in seconds. Values are averages over ten-fold cross validation.
+ Precision, recall, and f-score are expressed as percentages.*

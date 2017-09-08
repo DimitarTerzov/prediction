@@ -10,6 +10,7 @@ from sklearn.linear_model import SGDClassifier, LogisticRegression
 from sklearn.svm import LinearSVC
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import classification_report, accuracy_score, make_scorer
 from collections import defaultdict
@@ -158,6 +159,9 @@ def get_classifier(name):
         return MultinomialNB()
     if name == "MAXENT":
         return LogisticRegression(verbose=1)
+    if name == "NEURAL_NET":
+        return MLPClassifier(solver='lbfgs', alpha=1e-5,
+                             hidden_layer_sizes=(5, 2), random_state=1)
     return LinearSVC(random_state=0, verbose=1)
 
 def main():
@@ -178,7 +182,10 @@ def main():
     print("Got data, took %.2f seconds" % took2)
     print("Building models with 10-fold cross-validation (for now)")
 
-    classifiers = ['MONTE_CARLO', 'RANDOM_FOREST', 'NAIVE_BAYES', 'MAXENT', 'SVM']
+    classifiers = [
+        'MONTE_CARLO', 'NAIVE_BAYES', 'MAXENT', 'SVM'
+    ]
+    # skipping 'RANDOM_FOREST' since it takes so long
     if os.getenv("CLASSIFIER"):
         classifiers = [os.getenv("CLASSIFIER")]
 
