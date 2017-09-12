@@ -35,7 +35,7 @@ def get_features():
         TeamName,
         GameName,
         convert(varchar, EventStartDate),
-        PlayerRankingPoints
+        PlayerRankingPoints,
         CASE WHEN (GamePlayedAsHomeTeam = 1 AND GameWonBy = 'Home')
             OR (GamePlayedAsHomeTeam != 1 AND GameWonBy = 'Away')
             THEN 1
