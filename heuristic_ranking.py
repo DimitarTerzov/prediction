@@ -35,12 +35,12 @@ def get_features():
         TeamName,
         GameName,
         convert(varchar, EventStartDate),
+        PlayerRankingPoints
         CASE WHEN (GamePlayedAsHomeTeam = 1 AND GameWonBy = 'Home')
             OR (GamePlayedAsHomeTeam != 1 AND GameWonBy = 'Away')
             THEN 1
             ELSE 0
         END
-        PlayerRankingPoints
     FROM vwSeedionData
     """ % top
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
@@ -49,7 +49,7 @@ def get_features():
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
     while row:
-        (player, team, game, date, won, ranking_points) = row
+        (player, team, game, date, ranking_points, won) = row
         gameid = "%s-%s" % (game, date)
         PLAYER_GAME_POINTS[player][gameid] = ranking_points
         PLAYER_GAME_TEAM[player][gameid] = team
