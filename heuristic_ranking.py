@@ -24,7 +24,19 @@ TEAM_GAME_PLAYERS = defaultdict(dict)
 GAME_TEAMS_PLAYERS = defaultdict(dict)
 GAME_TO_WINNING_TEAM = {}
 
+if os.getenv("WITH_PICKLE") == "1":
+    print("Unpickling")
+    pickled = pickle.load(open('heuristic_ranking_features.pickle', 'rb'))
+    PLAYER_GAME_POINTS = pickled['PLAYER_GAME_POINTS']
+    PLAYER_GAME_TEAM = pickled['PLAYER_GAME_TEAM']
+    PLAYER_TEAM_GAME = pickled['PLAYER_TEAM_GAME']
+    TEAM_GAME_PLAYERS = pickled['TEAM_GAME_PLAYERS']
+    GAME_TEAMS_PLAYERS = pickled['GAME_TEAMS_PLAYERS']
+    GAME_TO_WINNING_TEAM = pickled['GAME_TO_WINNING_TEAM']
+
 def get_features():
+    if os.getenv("WITH_PICKLE") == "1":
+        return
     top = ""
     if os.getenv("TOP_N"):
         top = "TOP %s" % os.getenv("TOP_N")
@@ -59,6 +71,15 @@ def get_features():
         if won:
             GAME_TO_WINNING_TEAM[gameid] = team
         row = cursor.fetchone()
+    with open('heuristic_ranking_features.pickle', 'wb') as fl:
+        pickled = {}
+        pickled['PLAYER_GAME_POINTS'] = PLAYER_GAME_POINTS
+        pickled['PLAYER_GAME_TEAM'] = PLAYER_GAME_TEAM
+        pickled['PLAYER_TEAM_GAME'] = PLAYER_TEAM_GAME
+        pickled['TEAM_GAME_PLAYERS'] = TEAM_GAME_PLAYERS
+        pickled['GAME_TEAMS_PLAYERS'] = GAME_TEAMS_PLAYERS
+        pickled['GAME_TO_WINNING_TEAM'] = GAME_TO_WINNING_TEAM
+        pickle.dump(pickled, fl)
 
 
 def main():
