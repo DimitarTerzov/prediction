@@ -81,6 +81,7 @@ def main():
                 total_score -= PLAYER_GAME_POINTS[player][game]
             scorer.append((team, total_score))
             predicted_winner = sorted(scorer, key=lambda x: x[1])[0][0]
+            print("Predicted winner is %s, actual is %s" % (predicted_winner, GAME_TO_WINNING_TEAM.get(game, None)))
             if predicted_winner == GAME_TO_WINNING_TEAM.get(game, None):
                 # correctly predicted the winner and the loser
                 tp += 1.0
