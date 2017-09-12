@@ -43,6 +43,7 @@ Some basic statistics on the data:
 
 ## Baseline Heuristic
 
+### Heuristic 1: Aggregate Total Wins Per Player
 The baseline heuristic is as follows:
 - Every player gets a point for every game they have played where the
   team they were on won
@@ -76,6 +77,8 @@ Fscore	0.30
 Interestingly, what this means for the data set is that betting
 *against* this heuristic gives you 70% accuracy in predicting the
 winning team of a match.
+
+### Heuristic 2: Aggregate Total Ranking Per Player
 
 ## Using Machine Learning
 
