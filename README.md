@@ -17,6 +17,7 @@ PlayerFirstName	nvarchar	no	200	     	     	no	(n/a)	(n/a)	Latin1_General_CI_AI
 PlayerLastName	nvarchar	no	200	     	     	no	(n/a)	(n/a)	Latin1_General_CI_AI
 PlayerDateOfBirth	varchar	no	10	     	     	yes	no	yes	SQL_Latin1_General_CP1_CI_AS
 PlayerGender	varchar	no	6	     	     	no	no	no	SQL_Latin1_General_CP1_CI_AS
+PlayerRankingPoints	float	no	8	53   	NULL	no	(n/a)	(n/a)	NULL
 TeamName	nvarchar	no	100	     	     	no	(n/a)	(n/a)	Latin1_General_CI_AS
 EventName	nvarchar	no	400	     	     	no	(n/a)	(n/a)	Latin1_General_CI_AS
 EventSeason	int	no	4	10   	0    	yes	(n/a)	(n/a)	NULL
