@@ -102,17 +102,16 @@ def main():
                 total_score += sum(PLAYER_GAME_POINTS[player].values())
                 total_score -= PLAYER_GAME_POINTS[player][game]
             scorer.append((team, total_score))
-            score_sort = sorted(scorer, key=lambda x: x[1])
-            print(score_sort)
-            predicted_winner = score_sort[0][0]
-            if predicted_winner == GAME_TO_WINNING_TEAM.get(game, None):
-                # correctly predicted the winner and the loser
-                tp += 1.0
-                tn += 1.0
-            else:
-                # incorreclty predicted the winner and the loser
-                fp += 1.0
-                fn += 1.0
+        score_sort = sorted(scorer, key=lambda x: x[1])
+        predicted_winner = score_sort[0][0]
+        if predicted_winner == GAME_TO_WINNING_TEAM.get(game, None):
+            # correctly predicted the winner and the loser
+            tp += 1.0
+            tn += 1.0
+        else:
+            # incorreclty predicted the winner and the loser
+            fp += 1.0
+            fn += 1.0
     precision = tp / (tp + fp)
     recall = tp / (tp + fn)
     true_negative_rate = tn / (tn + fp)
