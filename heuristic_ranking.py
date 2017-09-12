@@ -2,6 +2,7 @@ from __future__ import print_function
 import pyodbc
 import os
 import time
+import pickle
 from collections import defaultdict
 
 """
