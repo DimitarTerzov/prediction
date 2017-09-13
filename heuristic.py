@@ -47,7 +47,7 @@ def get_features():
         %s
         PlayerId,
         TeamName,
-        GameName,
+        GameId,
         convert(varchar, EventStartDate),
         CASE WHEN (GamePlayedAsHomeTeam = 1 AND GameWonBy = 'Home')
             OR (GamePlayedAsHomeTeam != 1 AND GameWonBy = 'Away')
@@ -62,8 +62,7 @@ def get_features():
     playerToWins = defaultdict(int)
     row = cursor.fetchone()
     while row:
-        (player, team, game, date, point) = row
-        gameid = "%s-%s" % (game, date)
+        (player, team, gameid, point) = row
         PLAYER_GAME_POINTS[player][gameid] = point
         PLAYER_GAME_TEAM[player][gameid] = team
         PLAYER_TEAM_GAME[player][team] = gameid
