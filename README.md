@@ -65,14 +65,29 @@ The code for this test lives in `heuristic.py`.
 Here's an example output of that test:
 
 ```
+ubuntu@ip-172-31-39-182:~/seedion$ python3 heuristic.py
 Getting data...
-Got data, took 198.35 seconds
+Got data, took 313.89 seconds
 
-Precision	0.30
-Recall	0.30
-True Neg	0.30
-Acc	0.30
-Fscore	0.30
+Precision	0.50
+Recall	0.50
+True Neg	0.50
+Acc	0.50
+Fscore	0.50
+
+Finished in 319.91 seconds
+ubuntu@ip-172-31-39-182:~/seedion$ python3 heuristic_ranking.py
+Getting data...
+Got data, took 314.46 seconds
+
+Precision	0.36
+Recall	0.36
+True Neg	0.36
+Acc	0.36
+Fscore	0.36
+
+Finished in 321.66 seconds
+
 ```
 
 Interestingly, what this means for the data set is that betting

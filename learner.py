@@ -63,7 +63,7 @@ def get_features():
         %s
         PlayerId,
         TeamName,
-        GameId
+        GameId,
         CASE WHEN (GamePlayedAsHomeTeam = 1 AND GameWonBy = 'Home')
             OR (GamePlayedAsHomeTeam != 1 AND GameWonBy = 'Away')
             THEN 1
