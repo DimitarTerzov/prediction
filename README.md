@@ -38,9 +38,9 @@ TeamFinalStanding	tinyint	no	1	3    	0    	no	(n/a)	(n/a)	NULL
 ```
 
 Some basic statistics on the data:
-* 112,061 teams
-* 369,324 players
-* 161,162 games
+* 112702 teams
+* 371793 players
+* 339190 games
 
 ## Baseline Heuristic
 
@@ -76,6 +76,24 @@ Acc	0.50
 Fscore	0.50
 
 Finished in 319.91 seconds
+```
+
+The baseline heuristic seems to be as effective as a coin flip.
+
+### Heuristic 2: Aggregate Total Ranking Per Player
+
+To explore other features, we implement a second heuristic,
+using the same evaluation approach. Instead of total all-time wins minus
+total all-time losses for each player on a team, we sum together
+the current rank of each player on a team. Assuming a higher ranking value
+means that the player is comparatively worse than other players in the
+same group, we predict the winner of the
+match-up to be the team whose sum of player ranking values is the lowest.
+
+The heuristic and its test is written in `heuristic_ranking.py`.
+Here is an example output of that test:
+
+```
 ubuntu@ip-172-31-39-182:~/seedion$ python3 heuristic_ranking.py
 Getting data...
 Got data, took 314.46 seconds
@@ -87,14 +105,12 @@ Acc	0.36
 Fscore	0.36
 
 Finished in 321.66 seconds
-
 ```
 
-Interestingly, what this means for the data set is that betting
-*against* this heuristic gives you 70% accuracy in predicting the
-winning team of a match.
-
-### Heuristic 2: Aggregate Total Ranking Per Player
+Given the comparison between the two heuristics, it's clear that
+a the players' long-term record in a given team, in aggregate, is
+a stronger indicator of whether a team will win against a particular
+opponent than comparing aggregate ranking.
 
 ## Using Machine Learning
 
@@ -226,25 +242,26 @@ Multi-Layered Perceptron Classifier (MLP).
 
 | Method | Fit Time | Score Time | Precision | Recall | F-Score |
 | ------ | --------:| ----------:| ---------:|-------:|--------:|
-| Heuristic | N/A   | N/A        | 30        | 30     |   30    |
-| Heuristic^-1 | N/A  | N/A      | 70        | 70     | 70      |
-| SGD    | 3.3      | 0.12       | 54.94     | 44.0   | 48.32   |
+| Heuristic A | N/A   | N/A        | 50        | 50     |   50    |
+| Heuristic B | N/A  | N/A      | 36        | 36     | 36      |
+| SGD    | 1.31      | 0.09       | 63.97     | 64.83   | 64.83   |
 | Random Forest | 16203.3 | 284.99  | 49.27  | 39.4   | 43.22   |
-| Naive Bayes | 6.2  | 0.68      | 35.72     | 87.11  | 50.4    |
-| Logistic Regression | 0.49 | 0.50 | 57.85 | 42.78 | 48.83 |
-| SVM | 1267.48 | 0.47 | 46.53 | 54.1 | 49.6 |
-| Neural Network | 529.83 | 0.37 | 47.4 | 69.6 | 56.3 |
+| Naive Bayes | 0.59  | 0.13      | 67.05     | 68.54  | 67.79    |
+| Logistic Regression | 40.03 |  0.087 | 72.57 | 73.20 | 72.88 |
+| **SVM** | **33.9** | **0.09** | **73.03** | **73.27** | **73.15** |
+| Neural Network | 7.05 | 0.15 | 50.50 | 1.0 | 67.11 |
 
 *Times are in seconds. Values are averages over ten-fold cross validation.
  Precision, recall, and f-score are expressed as percentages.*
 
 
 ### Conclusion and Future Work
-It appears that given the source data, the inverse approach of our
-baseline heuristic remains unreasonably effective with an F-Score of 70%.
 
-The best-performing machine learning model is the Naive Bayes implementation,
-which performs roughly as well as a coin flip.
+We are able to successfully use machine learning with a handful of
+key features to successfully predict whether a team will win or lose
+a particular match-up with an F-score of 73.15 using an SVM-based
+learning model. All learning models provide much more effective
+predictive power than either of the baseline heuristics we explored.
 
 Some research into
 [existing work in the field of machine learning for
@@ -256,8 +273,15 @@ may provide some performance improvement, while the choice of a given
 machine learning model may not necessarily have a strong impact.
 Notable as well is that the state of the art in using machine
 learning to predict winners for basketball has so far only been
-roughly *75% effective*, which means a significant investment in
-feature selection for an increasingly diminishing return.
+roughly *75% effective*.
+
+This means that our current model selection and feature set is within
+two points of *state of the art* when using suport vector machines.
+
+The go-forward recommendation would be to build out an
+SVM-based model as part of an application server for delivering
+predictions as a service. Moving forward we should use this SVM
+model to compare improvements against.
 
 
 ## Replicating the Results
