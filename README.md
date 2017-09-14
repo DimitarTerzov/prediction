@@ -244,7 +244,7 @@ Multi-Layered Perceptron Classifier (MLP).
 | Heuristic A | N/A   | N/A        | 50        | 50     |   50    |
 | Heuristic B | N/A  | N/A      | 64       | 64     | 64      |
 | SGD    | 1.31      | 0.09       | 63.97     | 64.83   | 64.83   |
-| Random Forest | 16203.3 | 284.99  | 49.27  | 39.4   | 43.22   |
+| Random Forest | 35380.57 | 969.06  | 66.12  | 61.28  | 63.61  |
 | Naive Bayes | 0.59  | 0.13      | 67.05     | 68.54  | 67.79    |
 | Logistic Regression | 40.03 |  0.087 | 72.57 | 73.20 | 72.88 |
 | **SVM** | **33.9** | **0.09** | **73.03** | **73.27** | **73.15** |
