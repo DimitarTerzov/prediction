@@ -85,10 +85,10 @@ The baseline heuristic seems to be as effective as a coin flip.
 To explore other features, we implement a second heuristic,
 using the same evaluation approach. Instead of total all-time wins minus
 total all-time losses for each player on a team, we sum together
-the current rank of each player on a team. Assuming a higher ranking value
-means that the player is comparatively worse than other players in the
+the current rank of each player on a team. Assuming a value for ranking points
+means that the player is comparatively better than other players in the
 same group, we predict the winner of the
-match-up to be the team whose sum of player ranking values is the lowest.
+match-up to be the team whose sum of player ranking values is the highest.
 
 The heuristic and its test is written in `heuristic_ranking.py`.
 Here is an example output of that test:
@@ -98,19 +98,18 @@ ubuntu@ip-172-31-39-182:~/seedion$ python3 heuristic_ranking.py
 Getting data...
 Got data, took 314.46 seconds
 
-Precision	0.36
-Recall	0.36
-True Neg	0.36
-Acc	0.36
-Fscore	0.36
+Precision	0.64
+Recall	0.64
+True Neg	0.64
+Acc	0.64
+Fscore	0.64
 
 Finished in 321.66 seconds
 ```
 
-Given the comparison between the two heuristics, it's clear that
-a the players' long-term record in a given team, in aggregate, is
-a stronger indicator of whether a team will win against a particular
-opponent than comparing aggregate ranking.
+This approach provides a relatively strong baseline without machine learning,
+but does leave some room for improvement, as more than a third of
+all match-ups cannot have their outcome accurately predicted.
 
 ## Using Machine Learning
 
@@ -243,7 +242,7 @@ Multi-Layered Perceptron Classifier (MLP).
 | Method | Fit Time | Score Time | Precision | Recall | F-Score |
 | ------ | --------:| ----------:| ---------:|-------:|--------:|
 | Heuristic A | N/A   | N/A        | 50        | 50     |   50    |
-| Heuristic B | N/A  | N/A      | 36        | 36     | 36      |
+| Heuristic B | N/A  | N/A      | 64       | 64     | 64      |
 | SGD    | 1.31      | 0.09       | 63.97     | 64.83   | 64.83   |
 | Random Forest | 16203.3 | 284.99  | 49.27  | 39.4   | 43.22   |
 | Naive Bayes | 0.59  | 0.13      | 67.05     | 68.54  | 67.79    |
@@ -262,6 +261,8 @@ key features to successfully predict whether a team will win or lose
 a particular match-up with an F-score of 73.15 using an SVM-based
 learning model. All learning models provide much more effective
 predictive power than either of the baseline heuristics we explored.
+
+This provides nearly a 10% improvement over an already strong baseline.
 
 Some research into
 [existing work in the field of machine learning for
