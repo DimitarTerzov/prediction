@@ -27,7 +27,7 @@ GAME_TO_WINNING_TEAM = {}
 
 
 if os.getenv("WITH_PICKLE") == "1":
-    print("Unpickling")
+    print("Unpickling pre-processed feature data from heuristic_features.pickle")
     pickled = pickle.load(open('heuristic_features.pickle', 'rb'))
     PLAYER_GAME_POINTS = pickled['PLAYER_GAME_POINTS']
     PLAYER_GAME_TEAM = pickled['PLAYER_GAME_TEAM']

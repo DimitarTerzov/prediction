@@ -39,7 +39,7 @@ GAME_TO_DIVISION = {}
 GAME_TO_GENDER = {}
 
 if os.getenv("WITH_PICKLE") == "1":
-    print("Unpickling")
+    print("Unpickling pre-processed feature data from features.pickle")
     pickled = pickle.load(open('features.pickle', 'rb'))
     PLAYER_GAME_TEAM = pickled['PLAYER_GAME_TEAM']
     PLAYER_TEAM_GAME = pickled['PLAYER_TEAM_GAME']
