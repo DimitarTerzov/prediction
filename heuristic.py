@@ -70,7 +70,7 @@ def get_features():
         if point == 1:
             GAME_TO_WINNING_TEAM[gameid] = team
         row = cursor.fetchone()
-    with open('heuristic_ranking_features.pickle', 'wb') as fl:
+    with open('ranking_features.pickle', 'wb') as fl:
         pickled = {}
         pickled['PLAYER_GAME_POINTS'] = PLAYER_GAME_POINTS
         pickled['PLAYER_GAME_TEAM'] = PLAYER_GAME_TEAM

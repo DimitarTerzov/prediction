@@ -287,19 +287,15 @@ model to compare improvements against.
 
 ## Replicating the Results
 
+Assuming you have the correct keypair to log into the server:
+
 ```bash
-# from the server hosting the code
+# Log into the server
+$ ssh -i "3x3_KeyPair.pem" ubuntu@54.77.158.75
+
+# from the server hosting the code, access the code folder
 $ cd ~/seedion
 
-# enters the pipenv virtual environment
-$ pipenv shell
-
-# calculates the heuristic and outputs a report
-# takes about five minutes, mostly from pulling data from the DB
-$ python3 heuristic.py
-
-# runs learners using pickled data from DB to speed things up
-# You can remove the WITH_PICKLE=1 to re-query from the DB
-# You can specify a classifier using, for example, CLASSIFIER=NAIVE_BAYES
-$ WITH_PICKLE=1 NUM_JOBS=8 python3 learner.py
+# this runs both heuristics and the machine learning suite
+$ ./run_report
 ```

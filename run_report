@@ -1,0 +1,19 @@
+#!/bin/bash -e
+
+echo "===================================================================="
+echo "Running Heuristic A: Aggregate Net Wins vs. Aggregate Net Wins"
+echo "===================================================================="
+pipenv run python3 WITH_PICKLE=1 heuristic.py
+echo "===================================================================="
+
+echo "===================================================================="
+echo "Running Heuristic B: Total Ranking Points vs. Total Ranking Points"
+echo "===================================================================="
+pipenv run python3 WITH_PICKLE=1 heuristic_ranking.py
+echo "===================================================================="
+
+echo "===================================================================="
+echo "Running Machine Learning Suite"
+echo "===================================================================="
+pipenv run python3 WITH_PICKLE=1 NUM_JOBS=8 learner.py
+echo "===================================================================="
