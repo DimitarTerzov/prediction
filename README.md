@@ -299,3 +299,6 @@ $ cd ~/seedion
 # this runs both heuristics and the machine learning suite
 $ ./run_report
 ```
+
+Note that random forest and has been removed from the list of learners
+because of the long training time.
