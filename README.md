@@ -85,7 +85,7 @@ The baseline heuristic seems to be as effective as a coin flip.
 To explore other features, we implement a second heuristic,
 using the same evaluation approach. Instead of total all-time wins minus
 total all-time losses for each player on a team, we sum together
-the current rank of each player on a team. Assuming a value for ranking points
+the ranking points of each player on a team. Assuming a value for ranking points
 means that the player is comparatively better than other players in the
 same group, we predict the winner of the
 match-up to be the team whose sum of player ranking values is the highest.
