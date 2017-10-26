@@ -1,6 +1,10 @@
 #!/bin/bash -e
 
 echo "===================================================================="
+echo "Iteration 1: Running against all data"
+echo "===================================================================="
+
+echo "===================================================================="
 echo "Running Heuristic A: Aggregate Net Wins vs. Aggregate Net Wins"
 echo "===================================================================="
 WITH_PICKLE=1 pipenv run python3 heuristic.py
@@ -16,4 +20,27 @@ echo "===================================================================="
 echo "Running Machine Learning Suite"
 echo "===================================================================="
 WITH_PICKLE=1 NUM_JOBS=8 pipenv run python3 learner.py
+echo "===================================================================="
+
+
+echo "===================================================================="
+echo "Iteration 2: Running against top 3 data"
+echo "===================================================================="
+
+echo "===================================================================="
+echo "Running Heuristic A: Aggregate Net Wins vs. Aggregate Net Wins"
+echo "===================================================================="
+DB=vwSeedionDataTop3 WITH_PICKLE=1 pipenv run python3 heuristic.py
+echo "===================================================================="
+
+echo "===================================================================="
+echo "Running Heuristic B: Total Ranking Points vs. Total Ranking Points"
+echo "===================================================================="
+DB=vwSeedionDataTop3 WITH_PICKLE=1 pipenv run python3 heuristic_ranking.py
+echo "===================================================================="
+
+echo "===================================================================="
+echo "Running Machine Learning Suite"
+echo "===================================================================="
+DB=vwSeedionDataTop3 WITH_PICKLE=1 NUM_JOBS=8 pipenv run python3 learner.py
 echo "===================================================================="

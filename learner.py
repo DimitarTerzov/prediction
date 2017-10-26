@@ -38,9 +38,11 @@ GAME_TO_TEAM_POINTS = defaultdict(dict)
 GAME_TO_DIVISION = {}
 GAME_TO_GENDER = {}
 
+DB = os.getenv('DB', 'vwSeedionData')
+
 if os.getenv("WITH_PICKLE") == "1":
-    print("Unpickling pre-processed feature data from features.pickle")
-    pickled = pickle.load(open('features.pickle', 'rb'))
+    print("Unpickling pre-processed feature data from features_%s.pickle" % DB)
+    pickled = pickle.load(open('features_%s.pickle' % DB, 'rb'))
     PLAYER_GAME_TEAM = pickled['PLAYER_GAME_TEAM']
     PLAYER_TEAM_GAME = pickled['PLAYER_TEAM_GAME']
     TEAM_GAME_PLAYERS = pickled['TEAM_GAME_PLAYERS']
@@ -74,8 +76,8 @@ def get_features():
         GameAwayTeamPoints,
         DivisionName,
         DivisionGender
-    FROM vwSeedionData
-    """ % top
+    FROM %s
+    """ % (top, DB)
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
     cursor = cxn.cursor()
     cursor.execute(query)
@@ -99,7 +101,7 @@ def get_features():
         GAME_TO_GENDER[gameid] = division_gender
         row = cursor.fetchone()
 
-    with open('features.pickle', 'wb') as fl:
+    with open('features_%s.pickle' % DB, 'wb') as fl:
         pickled = {}
         pickled['PLAYER_GAME_TEAM'] = PLAYER_GAME_TEAM
         pickled['PLAYER_TEAM_GAME'] = PLAYER_TEAM_GAME

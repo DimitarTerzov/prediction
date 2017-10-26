@@ -25,9 +25,11 @@ TEAM_GAME_PLAYERS = defaultdict(dict)
 GAME_TEAMS_PLAYERS = defaultdict(dict)
 GAME_TO_WINNING_TEAM = {}
 
+DB = os.getenv('DB', 'vwSeedionData')
+
 if os.getenv("WITH_PICKLE") == "1":
-    print("Unpickling pre-processed feature data from heuristic_ranking_features.pickle")
-    pickled = pickle.load(open('heuristic_ranking_features.pickle', 'rb'))
+    print("Unpickling pre-processed feature data from heuristic_ranking_features_%s.pickle" % DB)
+    pickled = pickle.load(open('heuristic_ranking_features_%s.pickle' % DB, 'rb'))
     PLAYER_GAME_POINTS = pickled['PLAYER_GAME_POINTS']
     PLAYER_GAME_TEAM = pickled['PLAYER_GAME_TEAM']
     PLAYER_TEAM_GAME = pickled['PLAYER_TEAM_GAME']
@@ -53,8 +55,8 @@ def get_features():
             THEN 1
             ELSE 0
         END
-    FROM vwSeedionData
-    """ % top
+    FROM %s
+    """ % (top, DB)
     cxn = pyodbc.connect(";".join(ODBC_DIRECTIVES))
     cursor = cxn.cursor()
     cursor.execute(query)
@@ -70,7 +72,7 @@ def get_features():
         if won:
             GAME_TO_WINNING_TEAM[gameid] = team
         row = cursor.fetchone()
-    with open('heuristic_ranking_features.pickle', 'wb') as fl:
+    with open('heuristic_ranking_features_%s.pickle' % DB, 'wb') as fl:
         pickled = {}
         pickled['PLAYER_GAME_POINTS'] = PLAYER_GAME_POINTS
         pickled['PLAYER_GAME_TEAM'] = PLAYER_GAME_TEAM
