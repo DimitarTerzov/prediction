@@ -10,7 +10,7 @@ Usually you don't store this information in version control,
 but this is a private project with little variation.
 """
 ODBC_DIRECTIVES = [
-    "DRIVER={ODBC Driver 13 for SQL Server}",
+    "DRIVER={ODBC Driver 17 for SQL Server}",
     "PORT=1433",
     "SERVER=fiba3x3.database.windows.net",
     "DATABASE=FIBA_3x3",
