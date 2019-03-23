@@ -276,7 +276,8 @@ def get_team_features(teamName, date=datetime.now(), days_before=365, data=None,
     startDate = date - timedelta(days=days_before)
 
     if data is None:
-        print(teamName)
+        # Dimitar changed
+        #print(teamName)
         queryAll = "select * from %s where EventStartDate > ? and EventStartDate < ? and (GameTeamNameHome = ? or GameTeamNameAway = ?)" % DB
         data = pd.read_sql(queryAll, cxn, params=[startDate, date, teamName.encode('utf-16le'), teamName.encode('utf-16le')])
         data.set_index(['GameId', 'PlayerId'])
@@ -364,7 +365,8 @@ def get_future_data(date=datetime.now(), end_date=None):
     rows = data.drop_duplicates(['GameId'])
     rows.sort_values(by=['EventStartDate'])
 
-    print(rows.shape)
+    # Dimitar changed
+    #print(rows.shape)
 
     return rows
 
