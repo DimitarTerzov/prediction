@@ -10,8 +10,7 @@ import xgboost as xgb
 import requests
 import json
 
-# This feature is depricated
-#pd.set_option('display.height', 100)
+pd.set_option('display.height', 100)
 pd.set_option('display.max_rows', 50)
 pd.set_option('display.max_columns', 10)
 pd.set_option('display.width', 1000)
@@ -58,7 +57,7 @@ def main_menu():
         print("Getting data from the database and preparing features for training...")
         prepare_features(date, days_before)
         print("Loading features...")
-        X, y = load_features(date=date)
+        X, y = load_features(date)
         clf = get_classifier("XGB")
         print("Training...")
         clf.fit(X, y)
@@ -71,7 +70,7 @@ def main_menu():
     data = get_future_data(date)
     data['EventStartDate'] = pd.to_datetime(data['EventStartDate'])
     print("\nGames which are going to take place later than ", date, " :\n")
-    #print(data)
+    print(data)
     games_data = predict_menu()
     print("\nExtracting features and running predictions...")
     predict(games_data, clf)
@@ -84,10 +83,6 @@ def main_menu():
     return
 
 def predict(games_data, clf, menu_mode=True):
-
-    #Dimitar changed
-    print('*************In "predict"***********')
-
     features = {}
     res = []
     pc = 0
@@ -155,9 +150,6 @@ def predict(games_data, clf, menu_mode=True):
         if not menu_mode:
             # Dimitar changed
             #print(pred_data)
-
-            #Dimitar changed
-            print('**************In "preict" saveToElastic************')
             saveToElastic(pred_data)
 
         res.append(pred_data)
@@ -190,16 +182,10 @@ def predict(games_data, clf, menu_mode=True):
             for pred_data in res:
                 saveToElastic(pred_data)
 
-    #Dimitar changed
-    print('*****************Exit "predict"*********************')
-
     return res
 
 
 def saveToElastic(pred_data):
-
-    #Dimitar
-    print('*************In saveToElastic******************')
     json_data = json.dumps(pred_data)
 
     # Dimitar start change
@@ -214,9 +200,6 @@ def saveToElastic(pred_data):
     results = json.loads(response.text)
 
     print(results)
-
-    #Dimitar
-    print('************Exit saveToElastic***************')
 
 # Date menu
 def date_menu():
