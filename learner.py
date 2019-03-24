@@ -14,19 +14,8 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.model_selection import cross_validate
 from sklearn.metrics import classification_report, accuracy_score, make_scorer
 from collections import defaultdict
+from utils import ODBC_DIRECTIVES
 
-"""
-Usually you don't store this information in version control,
-but this is a private project with little variation.
-"""
-ODBC_DIRECTIVES = [
-    "DRIVER={ODBC Driver 13 for SQL Server}",
-    "PORT=1433",
-    "SERVER=fiba3x3.database.windows.net",
-    "DATABASE=FIBA_3x3",
-    "UID=client_seedion",
-    "PWD=BQcACAADBgwACAcHBA4MBQ",
-]
 
 PLAYER_GAME_TEAM = defaultdict(dict)
 PLAYER_TEAM_GAME = defaultdict(dict)

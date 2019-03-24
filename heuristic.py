@@ -4,19 +4,8 @@ import os
 import time
 import pickle
 from collections import defaultdict
+from utils import ODBC_DIRECTIVES
 
-"""
-Usually you don't store this information in version control,
-but this is a private project with little variation.
-"""
-ODBC_DIRECTIVES = [
-    "DRIVER={ODBC Driver 17 for SQL Server}",
-    "PORT=1433",
-    "SERVER=fiba3x3.database.windows.net",
-    "DATABASE=FIBA_3x3",
-    "UID=client_seedion",
-    "PWD=BQcACAADBgwACAcHBA4MBQ",
-]
 
 PLAYER_GAME_POINTS = defaultdict(dict)
 PLAYER_GAME_TEAM = defaultdict(dict)

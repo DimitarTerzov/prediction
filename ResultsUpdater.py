@@ -15,6 +15,8 @@ import schedule
 import logging
 from joblib import Parallel, delayed
 import multiprocessing
+from utils import ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD
+
 
 clf = joblib.load('XGB_v1.pkl')
 logging.basicConfig(filename="updater.log", level=logging.INFO)
@@ -79,11 +81,8 @@ def updatePreviousResults():
         }
     }, default=str)
 
-    #uri = 'http://localhost:9200/3x3prediction/_search'
-    #response = requests.get(uri, data=data, headers={'content-type': 'application/json'})
-
     uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/_search'
-    response = requests.get(uri, data=data, auth=('osse', 'Seedion2019!+'), headers={'content-type': 'application/json'})
+    response = requests.get(uri, data=data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
 
     results = json.loads(response.text)
 
@@ -99,7 +98,7 @@ def updatePreviousResults():
     for index, game_with_winner in data_with_winner.iterrows():
         game_id = game_with_winner["GameId"]
         actual_winner = game_with_winner["GameTeamNameWinner"]
-        uri = 'http://localhost:9200/3x3prediction/prediction/' + game_id + '/_update'
+        uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/prediction/' + game_id + '/_update'
 
         prediction_correct = actual_winner == game_ids_dict[game_id]
         logging.info("game_id: {} actual_winner: {} prediction_correct: {}".format(game_id, actual_winner, prediction_correct))
@@ -109,7 +108,7 @@ def updatePreviousResults():
             "lang": "painless",
         })
 
-        response = requests.post(uri, data=json_data, headers={'content-type': 'application/json'})
+        response = requests.post(uri, data=json_data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
         results = json.loads(response.text)
         logging.info("Elastic update results: ")
         logging.info(results)
@@ -149,7 +148,9 @@ if __name__ == "__main__":
 
     #runStartPrediction(num_days)
     #updatePreviousResults()
+
     schedule.every(1).minutes.do(updatePreviousResults)
+
     #schedule.every().day.at("01:30").do(runEveryDayPredictions)
 
     #runStartPrediction(num_days)
