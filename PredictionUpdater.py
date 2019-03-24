@@ -31,9 +31,6 @@ sys.excepthook = handler
 
 def runStartPrediction():
 
-    #Dimitar changed
-    print('**********Into runStartPrediction******************')
-
     logging.info("********************************* Running Initial Prediction *****************************************")
 
     date = datetime.now()
@@ -54,14 +51,8 @@ def runStartPrediction():
 
     logging.info("********************************* Finished Running Initial Prediction *****************************************")
 
-    #Dimitar changed
-    print('**********Exit runStartPrediction******************')
-
 
 def updatePreviousResults():
-    # Dimitar changed
-    print('********Into updatePreviousResults*************')
-
     today = datetime.now()
     yesterday = (today - timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
     days_before = (today - timedelta(days=7)).replace(hour=0, minute=0, second=0, microsecond=0)
@@ -96,6 +87,8 @@ def updatePreviousResults():
     uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/_search'
     response = requests.get(uri, data=data, auth=('osse', 'Seedion2019!+'), headers={'content-type': 'application/json'})
 
+    print('****** updatePreviousResults `get` status_code: {} ********'.format(response.status_code))
+
     # Dimitar stop change
 
     results = json.loads(response.text)
@@ -116,7 +109,7 @@ def updatePreviousResults():
         #uri = 'http://localhost:9200/3x3prediction/prediction/' + game_id + '/_update'
 
         # Dimitar changed
-        uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/' + game_id + '/_update'
+        uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/prediction/' + game_id + '/_update'
 
         prediction_correct = actual_winner == game_ids_dict[game_id]
         logging.info("game_id: {} actual_winner: {} prediction_correct: {}".format(game_id, actual_winner, prediction_correct))
@@ -126,15 +119,16 @@ def updatePreviousResults():
             "lang": "painless",
         })
 
-        response = requests.post(uri, data=json_data, headers={'content-type': 'application/json'})
+        response = requests.post(uri, data=json_data, auth=('osse', 'Seedion2019!+'), headers={'content-type': 'application/json'})
+
+        # Dimitar added
+        print('****** updatePreviousResults `post` status_code: {} ********'.format(response.status_code))
+
         results = json.loads(response.text)
         logging.info("Elastic update results: ")
         logging.info(results)
 
     logging.info("********************************* Finished Updating Previous Results *****************************************")
-
-    #Dimitar changed
-    print('********Exit updatePreviousResults*************')
 
 
 def runEveryDayPredictions():
