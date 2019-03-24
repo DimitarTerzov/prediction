@@ -1,4 +1,4 @@
-from __future__ import print_function
+﻿from __future__ import print_function
 import pyodbc
 import os
 import time
@@ -387,7 +387,9 @@ def get_winners_by_game_ids(start_date, end_date, game_ids):
     rows = data.drop_duplicates(['GameId'])
 
     winners = rows[(rows['GameId'].isin(game_ids)) & (rows["GameTeamNameWinner"] != '') & (rows["GameTeamNameWinner"] != None) & (~rows["GameTeamNameWinner"].str.isspace())]
-    print("Winners: ", winners)
+
+    #Dimitar changed
+    #print("Winners: ", winners)
 
     return winners
 
