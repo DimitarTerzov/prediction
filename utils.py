@@ -1,3 +1,4 @@
+import os
 import yaml
 
 
@@ -13,3 +14,4 @@ ODBC_DIRECTIVES = [
 ]
 ELASTIC_CLOUD_USER = config['elastic_cloud_user']
 ELASTIC_CLOUD_PWD = config['elastic_cloud_pwd']
+ELASTIC_CLOUD_URL = config['elastic_cloud_url']

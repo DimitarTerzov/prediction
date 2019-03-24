@@ -15,7 +15,7 @@ import schedule
 import logging
 from joblib import Parallel, delayed
 import multiprocessing
-from utils import ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD
+from utils import ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD, ELASTIC_CLOUD_URL
 
 
 clf = joblib.load('XGB_v1.pkl')
@@ -81,7 +81,7 @@ def updatePreviousResults():
         }
     }, default=str)
 
-    uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/_search'
+    uri = '{}3x3prediction/_search'.format(ELASTIC_CLOUD_URL)
     response = requests.get(uri, data=data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
 
     results = json.loads(response.text)
@@ -98,7 +98,7 @@ def updatePreviousResults():
     for index, game_with_winner in data_with_winner.iterrows():
         game_id = game_with_winner["GameId"]
         actual_winner = game_with_winner["GameTeamNameWinner"]
-        uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/prediction/' + game_id + '/_update'
+        uri = '{}3x3prediction/prediction/{}{}'.format(ELASTIC_CLOUD_URL, game_id, '/_update') #+ game_id + '/_update'
 
         prediction_correct = actual_winner == game_ids_dict[game_id]
         logging.info("game_id: {} actual_winner: {} prediction_correct: {}".format(game_id, actual_winner, prediction_correct))
