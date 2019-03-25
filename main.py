@@ -9,6 +9,8 @@ import pandas as pd
 import xgboost as xgb
 import requests
 import json
+from utils import ELASTIC_CLOUD_PWD, ELASTIC_CLOUD_URL, ELASTIC_CLOUD_USER
+
 
 pd.set_option('display.height', 100)
 pd.set_option('display.max_rows', 50)
@@ -70,7 +72,10 @@ def main_menu():
     data = get_future_data(date)
     data['EventStartDate'] = pd.to_datetime(data['EventStartDate'])
     print("\nGames which are going to take place later than ", date, " :\n")
-    print(data)
+
+    # Dimitar changed
+    #print(data)
+
     games_data = predict_menu()
     print("\nExtracting features and running predictions...")
     predict(games_data, clf)
@@ -186,20 +191,17 @@ def predict(games_data, clf, menu_mode=True):
 
 
 def saveToElastic(pred_data):
+    print('*************** In saveToElastic ******************')
     json_data = json.dumps(pred_data)
 
-    # Dimitar start change
-
-    #uri = 'http://localhost:9200/3x3prediction/prediction/' + pred_data["game_id"]
-    #response = requests.put(uri, data=json_data, headers={'content-type': 'application/json'})
-
-    uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/prediction/' + pred_data["game_id"]
-    response = requests.put(uri, data=json_data, auth=('osse', 'Seedion2019!+'), headers={'content-type': 'application/json'})
-    # Dimitar stop change
+    uri = '{}3x3prediction/prediction/{}'.format(ELASTIC_CLOUD_URL, pred_data["game_id"])
+    response = requests.put(uri, data=json_data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
 
     results = json.loads(response.text)
 
     print(results)
+
+    print('*************** Exit saveToElastic **********************')
 
 # Date menu
 def date_menu():
