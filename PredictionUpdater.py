@@ -3,6 +3,7 @@ import traceback
 import sys, os
 from datetime import datetime, timedelta
 import redis
+import yaml
 from learner_v4 import *
 from main import *
 from sklearn.externals import joblib
@@ -15,6 +16,8 @@ import schedule
 import logging
 from joblib import Parallel, delayed
 import multiprocessing
+from utils import ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD, ELASTIC_CLOUD_URL
+
 
 clf = joblib.load('XGB_v1.pkl')
 logging.basicConfig(filename="predictor.log", level=logging.INFO)
@@ -79,18 +82,8 @@ def updatePreviousResults():
         }
     }, default=str)
 
-    # Dimitar start change
-
-    #uri = 'http://localhost:9200/3x3prediction/_search'
-    #response = requests.get(uri, data=data, headers={'content-type': 'application/json'})
-
-    uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/_search'
-    response = requests.get(uri, data=data, auth=('osse', 'Seedion2019!+'), headers={'content-type': 'application/json'})
-
-    print('****** updatePreviousResults `get` status_code: {} ********'.format(response.status_code))
-
-    # Dimitar stop change
-
+    uri = '{}3x3prediction/_search'.format(ELASTIC_CLOUD_URL)
+    response = requests.get(uri, data=data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
     results = json.loads(response.text)
 
     game_ids_dict = {}
@@ -106,10 +99,7 @@ def updatePreviousResults():
         game_id = game_with_winner["GameId"]
         actual_winner = game_with_winner["GameTeamNameWinner"]
 
-        #uri = 'http://localhost:9200/3x3prediction/prediction/' + game_id + '/_update'
-
-        # Dimitar changed
-        uri = 'https://57c1618e6392477eac9348b7e4384c00.us-east-1.aws.found.io:9243/3x3prediction/prediction/' + game_id + '/_update'
+        uri = '{}3x3prediction/prediction/{}{}'.format(ELASTIC_CLOUD_URL, game_id, '/_update')
 
         prediction_correct = actual_winner == game_ids_dict[game_id]
         logging.info("game_id: {} actual_winner: {} prediction_correct: {}".format(game_id, actual_winner, prediction_correct))
@@ -119,10 +109,7 @@ def updatePreviousResults():
             "lang": "painless",
         })
 
-        response = requests.post(uri, data=json_data, auth=('osse', 'Seedion2019!+'), headers={'content-type': 'application/json'})
-
-        # Dimitar added
-        print('****** updatePreviousResults `post` status_code: {} ********'.format(response.status_code))
+        response = requests.post(uri, data=json_data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
 
         results = json.loads(response.text)
         logging.info("Elastic update results: ")

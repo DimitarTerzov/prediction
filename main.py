@@ -73,8 +73,7 @@ def main_menu():
     data['EventStartDate'] = pd.to_datetime(data['EventStartDate'])
     print("\nGames which are going to take place later than ", date, " :\n")
 
-    # Dimitar changed
-    #print(data)
+    print(data)
 
     games_data = predict_menu()
     print("\nExtracting features and running predictions...")
@@ -153,8 +152,7 @@ def predict(games_data, clf, menu_mode=True):
                 pc += 1
 
         if not menu_mode:
-            # Dimitar changed
-            #print(pred_data)
+            print(pred_data)
             saveToElastic(pred_data)
 
         res.append(pred_data)
@@ -177,8 +175,7 @@ def predict(games_data, clf, menu_mode=True):
 
         print("\n")
 
-    # Dimitar
-    #[print_dict(result) for result in res]
+    [print_dict(result) for result in res]
 
     if menu_mode:
         print("\nDo you want to save the result into ElasticSearch? (y/n)")

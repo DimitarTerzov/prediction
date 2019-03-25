@@ -17,6 +17,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 import pandas as pd
 import struct
+import yaml
 #from pymemcache.client.base import Client
 import redis
 from sklearn.model_selection import train_test_split
@@ -26,19 +27,8 @@ from xgboost.sklearn import XGBClassifier
 from sklearn import model_selection, metrics   #Additional scklearn functions
 from sklearn.model_selection import GridSearchCV   #Perforing grid search
 import uuid
+from utils import ODBC_DIRECTIVES
 
-"""
-Usually you don't store this information in version control,
-but this is a private project with little variation.
-"""
-ODBC_DIRECTIVES = [
-    "DRIVER={ODBC Driver 17 for SQL Server}",
-    "PORT=1433",
-    "SERVER=fiba3x3.database.windows.net",
-    "DATABASE=FIBA_3x3",
-    "UID=client_seedion",
-    "PWD=BQcACAADBgwACAcHBA4MBQ",
-]
 
 DB = os.getenv('DB', 'vwSeedionData')
 
@@ -276,8 +266,7 @@ def get_team_features(teamName, date=datetime.now(), days_before=365, data=None,
     startDate = date - timedelta(days=days_before)
 
     if data is None:
-        # Dimitar changed
-        #print(teamName)
+        print(teamName)
         queryAll = "select * from %s where EventStartDate > ? and EventStartDate < ? and (GameTeamNameHome = ? or GameTeamNameAway = ?)" % DB
         data = pd.read_sql(queryAll, cxn, params=[startDate, date, teamName.encode('utf-16le'), teamName.encode('utf-16le')])
         data.set_index(['GameId', 'PlayerId'])
@@ -328,27 +317,24 @@ def get_team_features(teamName, date=datetime.now(), days_before=365, data=None,
 
         last_game_data = game
 
-    # Dimitar
-    #print('\nteamName: ', teamName)
+    print('\nteamName: ', teamName)
 
     teamPlayers = last_game_data[last_game_data['PlayerId'].isin(teamPlayerIds)].drop_duplicates(['PlayerId'])[['PlayerId', 'PlayerFirstName', 'PlayerLastName', 'PlayerRankingPoints']]
     print("\nPlayers: ")
-    #Dimitar
-    #print(teamPlayers)
+    print(teamPlayers)
 
     averageRankingPoints = teamPlayers['PlayerRankingPoints'].mean()
     if averageRankingPoints is np.nan:
         averageRankingPoints = 0
 
-    #Dimitar
-    #print('\nteamTotalWins: ', teamTotalWins)
-    #print('teamTotalLoses: ', teamTotalLoses)
-    #print('teamTotalWinsThisSeason: ', teamTotalWinsThisSeason)
-    #print('teamTotalLosesThisSeason: ', teamTotalLosesThisSeason)
-    #print('teamTournamentsPlayedThisSeason: ', teamTournamentsPlayedThisSeason)
-    #print('teamTournamentsPlayed: ', teamTournamentsPlayed)
-    #print('averageRankingPoints: ', averageRankingPoints)
-    #print('========================================================================================================')
+    print('\nteamTotalWins: ', teamTotalWins)
+    print('teamTotalLoses: ', teamTotalLoses)
+    print('teamTotalWinsThisSeason: ', teamTotalWinsThisSeason)
+    print('teamTotalLosesThisSeason: ', teamTotalLosesThisSeason)
+    print('teamTournamentsPlayedThisSeason: ', teamTournamentsPlayedThisSeason)
+    print('teamTournamentsPlayed: ', teamTournamentsPlayed)
+    print('averageRankingPoints: ', averageRankingPoints)
+    print('========================================================================================================')
 
     return np.nan_to_num(np.asarray([teamTotalWins, teamTotalLoses, teamTotalWinsThisSeason, teamTotalLosesThisSeason, teamTournamentsPlayed, averageRankingPoints]))
 
@@ -365,8 +351,7 @@ def get_future_data(date=datetime.now(), end_date=None):
     rows = data.drop_duplicates(['GameId'])
     rows.sort_values(by=['EventStartDate'])
 
-    # Dimitar changed
-    #print(rows.shape)
+    print(rows.shape)
 
     return rows
 
@@ -388,8 +373,7 @@ def get_winners_by_game_ids(start_date, end_date, game_ids):
 
     winners = rows[(rows['GameId'].isin(game_ids)) & (rows["GameTeamNameWinner"] != '') & (rows["GameTeamNameWinner"] != None) & (~rows["GameTeamNameWinner"].str.isspace())]
 
-    #Dimitar changed
-    #print("Winners: ", winners)
+    print("Winners: ", winners)
 
     return winners
 
