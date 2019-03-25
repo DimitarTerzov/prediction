@@ -150,21 +150,15 @@ if __name__ == "__main__":
 
     #runStartPrediction()
 
-    #Dimitar changed
-    #schedule.every(45).minutes.do(updatePreviousResults)
-    #schedule.every().day.at("01:30").do(runStartPrediction)
-
-    updatePreviousResults()
-    runStartPrediction()
-    #Diomitar stop
+    schedule.every(45).minutes.do(updatePreviousResults)
+    schedule.every().day.at("01:30").do(runStartPrediction)
 
     #runStartPrediction(num_days)
 
     #schedule.every(1).minutes.do(updatePreviousResults)
     #schedule.every(10).minutes.do(runEveryDayPredictions)
 
-    #Dimitar
-    #while True:
-        #schedule.run_pending()
-        #time.sleep(500)
+    while True:
+        schedule.run_pending()
+        time.sleep(500)
 

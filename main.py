@@ -188,7 +188,7 @@ def predict(games_data, clf, menu_mode=True):
 
 
 def saveToElastic(pred_data):
-    print('*************** In saveToElastic ******************')
+    print('*************** save to elastic ******************')
     json_data = json.dumps(pred_data)
 
     uri = '{}3x3prediction/prediction/{}'.format(ELASTIC_CLOUD_URL, pred_data["game_id"])
@@ -197,8 +197,6 @@ def saveToElastic(pred_data):
     results = json.loads(response.text)
 
     print(results)
-
-    print('*************** Exit saveToElastic **********************')
 
 # Date menu
 def date_menu():
