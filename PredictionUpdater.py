@@ -142,6 +142,7 @@ def runEveryDayPredictions():
 
 # Main Program
 if __name__ == "__main__":
+
     global start_date
     start_date = datetime.now()
 
@@ -161,4 +162,3 @@ if __name__ == "__main__":
     while True:
         schedule.run_pending()
         time.sleep(500)
-
