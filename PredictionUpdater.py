@@ -19,7 +19,7 @@ import multiprocessing
 from utils import ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD, ELASTIC_CLOUD_URL
 
 
-clf = joblib.load('XGB_v1.pkl')
+clf = joblib.load(os.path.join(os.path.abspath(os.path.dirname(__file__)), 'XGB_v1.pkl'))
 logging.basicConfig(filename="predictor.log", level=logging.INFO)
 num_cores = multiprocessing.cpu_count()
 num_days = 92
