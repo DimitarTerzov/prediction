@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # Import the modules needed to run the script.
 import traceback
 import sys, os
@@ -62,14 +64,15 @@ def updatePreviousResults():
 
     logging.info("********************************* Updating Previous Results ('%s') *****************************************" % today)
 
+    print("***********Update Prections {}******".format(today))
+
     data = json.dumps({
+        "size": 100,
         "query": {
             "bool": {
-                "must_not": {
-                    "exists": {
-                        "field": "actual_winner"
-                    }
-            },
+                "must": [
+                    {"match": {"actual_winner" : "Not played yet"}}
+                ],
                 "filter": {
                     "range": {
                         "game_date": {
@@ -114,6 +117,8 @@ def updatePreviousResults():
         results = json.loads(response.text)
         logging.info("Elastic update results: ")
         logging.info(results)
+
+        print("******Update Elastic*****")
 
     logging.info("********************************* Finished Updating Previous Results *****************************************")
 
