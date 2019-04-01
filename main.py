@@ -136,7 +136,7 @@ def predict(games_data, clf, menu_mode=True):
             "team_b" : game_features["teamB"],
             "game_winner" : winner,
             "probability" : pred_prob * 100,
-            #"actual_winner": game_features["winner"],
+            "actual_winner": game_features["winner"],
             #"prediction_correct" : pred_correct,
             "game_date":  str(game_features["date"]).replace(" ","T"),
             "tournament_name": game_features["tournamentName"]
@@ -166,7 +166,7 @@ def predict(games_data, clf, menu_mode=True):
         print("probability : ", dictionary["probability"])
         if "actual_winner" in dictionary.keys():
             print("actual_winner : ", dictionary["actual_winner"])
-            print("prediction_correct : ", dictionary["prediction_correct"])
+            print("prediction_correct : ", dictionary.get("prediction_correct", "Not played yet"))
         print("game_date : ", dictionary["game_date"])
         print("game_id : ", dictionary["game_id"])
 
