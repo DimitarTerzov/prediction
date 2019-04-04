@@ -32,6 +32,13 @@ cd seedion/
 python3 everyday_updates.py
 ```
 
+### To make more specialized predictions
+```
+cd seedion/
+python3 main.py
+```
+Follow the instructions.
+
 # A Survey of Learning Models for Predicting the Outcome of Basketball Match-Ups
 
 This README outlines the machine learning approach taken to
