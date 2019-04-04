@@ -341,7 +341,8 @@ def get_team_features(teamName, date=datetime.now(), days_before=365, data=None,
 def get_future_data(date=datetime.now(), end_date=None):
 
     if end_date is not None:
-        queryAll = "select GameId, EventName, EventStartDate, GameTeamNameHome, GameTeamNameAway, GameTeamNameWinner from %s where EventStartDate > '%s' and EventStartDate <= '%s'" % (DB, date, end_date)
+        queryAll = "select GameId, EventName, EventStartDate, GameTeamNameHome, GameTeamNameAway, GameTeamNameWinner, PlayerFirstName, PlayerLastName, PlayerRankingPoints, TeamName from %s where EventStartDate > '%s' and EventStartDate <= '%s'" % (DB, date, end_date)
+
     else:
         queryAll = "select GameId, EventName, EventStartDate, GameTeamNameHome, GameTeamNameAway, GameTeamNameWinner from %s where EventStartDate > '%s'" % (DB, date)
 
@@ -353,7 +354,7 @@ def get_future_data(date=datetime.now(), end_date=None):
 
     #print(rows.shape)
 
-    return rows
+    return rows, data
 
 def flatten(l):
     for el in l:

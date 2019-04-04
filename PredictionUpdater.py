@@ -42,7 +42,7 @@ def runStartPrediction():
     future_date = date + timedelta(days=num_days)
 
     start_time = time.time()
-    data = get_future_data(date, future_date)
+    data, _ = get_future_data(date, future_date)
 
     games_data = []
     for index, game in data.iterrows():

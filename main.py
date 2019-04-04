@@ -69,7 +69,7 @@ def main_menu():
         days_before_menu()
 
     print("\nLoading data...")
-    data = get_future_data(date)
+    data, _ = get_future_data(date)
     data['EventStartDate'] = pd.to_datetime(data['EventStartDate'])
     print("\nGames which are going to take place later than ", date, " :\n")
 
@@ -139,7 +139,11 @@ def predict(games_data, clf, menu_mode=True):
             "actual_winner": game_features["winner"],
             #"prediction_correct" : pred_correct,
             "game_date":  str(game_features["date"]).replace(" ","T"),
-            "tournament_name": game_features["tournamentName"]
+            "tournament_name": game_features["tournamentName"],
+            "team_a_players_ranks" : game_features.get('teamA_players_ranks'),
+            "team_a_ranking_points": game_features.get('teamA_ranking_points'),
+            "team_b_players_ranks" : game_features.get('teamB_players_ranks'),
+            "team_b_ranking_points": game_features.get('teamB_ranking_points')
         }
 
         if game_features["date"] >= datetime.now():
@@ -192,8 +196,10 @@ def saveToElastic(pred_data):
     json_data = json.dumps(pred_data)
 
     test_elastic_url = "https://3289195282f548d8a353ea6edafebd0c.eu-central-1.aws.cloud.es.io:9243/"
+    test_user = "elastic"
+    test_pwd = "W28ZSdXyXPNFyzWbAxwmcXPQ"
     uri = '{}3x3prediction/prediction/{}'.format(test_elastic_url, pred_data["game_id"]) # .format(ELASTIC_CLOUD_URL, pred_data["game_id"])
-    response = requests.put(uri, data=json_data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
+    response = requests.put(uri, data=json_data, auth=(test_user, test_pwd), headers={'content-type': 'application/json'})
 
     results = json.loads(response.text)
 
@@ -359,7 +365,7 @@ def select_tournament_by_date():
 
     return game
 
-def buildGameData(key):
+def buildGameData(key, team_members=None):
     game_data = {}
     game_data["teamA"] = key['GameTeamNameHome']
     game_data["teamB"] = key['GameTeamNameAway']
@@ -368,7 +374,29 @@ def buildGameData(key):
     game_data["tournamentName"] = key['EventName']
     game_data["winner"] = key["GameTeamNameWinner"]
 
+    teamA_players_data = team_members[(game_data["id"] == team_members['GameId']) &
+                                      (game_data["teamA"] == team_members['TeamName'])][['PlayerFirstName', 'PlayerLastName', 'PlayerRankingPoints']]
+    game_data['teamA_players_ranks'] = get_players_names_rankings(teamA_players_data)
+    game_data['teamA_ranking_points'] = get_team_ranking_points(teamA_players_data)
+
+    teamB_players_data = team_members[(game_data["id"] == team_members['GameId']) &
+                                      (game_data["teamB"] == team_members['TeamName'])][['PlayerFirstName', 'PlayerLastName', 'PlayerRankingPoints']]
+    game_data['teamB_players_ranks'] = get_players_names_rankings(teamB_players_data)
+    game_data['teamB_ranking_points'] = get_team_ranking_points(teamB_players_data)
+
     return game_data
+
+def get_players_names_rankings(team_data):
+    players_names_ranks = []
+    for index, row in team_data.iterrows():
+        player_name = ' '.join([row['PlayerFirstName'], row['PlayerLastName']])
+        player_ranking_points = row['PlayerRankingPoints']
+        players_names_ranks.append({player_name: player_ranking_points})
+
+    return players_names_ranks
+
+def get_team_ranking_points(team_data):
+    return team_data['PlayerRankingPoints'].sum()
 
 def select_batch_tournament_by_date():
     global data
