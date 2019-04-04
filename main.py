@@ -195,7 +195,7 @@ def saveToElastic(pred_data):
     print('*************** save to elastic ******************')
     json_data = json.dumps(pred_data)
 
-    uri = '{}3x3prediction/prediction/{}'.format(ELASTIC_CLOUD_URL, pred_data["game_id"]) # .format(ELASTIC_CLOUD_URL, pred_data["game_id"])
+    uri = '{}3x3prediction/prediction/{}'.format(ELASTIC_CLOUD_URL, pred_data["game_id"])
     response = requests.put(uri, data=json_data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
 
     results = json.loads(response.text)
