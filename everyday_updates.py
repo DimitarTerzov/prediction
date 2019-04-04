@@ -51,11 +51,8 @@ def update_previous_results():
         }
     }, default=str)
 
-    test_elastic_url = "https://3289195282f548d8a353ea6edafebd0c.eu-central-1.aws.cloud.es.io:9243/"
-    test_user = "elastic"
-    test_pwd = "W28ZSdXyXPNFyzWbAxwmcXPQ"
-    uri = '{}3x3prediction/_search'.format(test_elastic_url)
-    response = requests.get(uri, data=data, auth=(test_user, test_pwd), headers={'content-type': 'application/json'})
+    uri = '{}3x3prediction/_search'.format(ELASTIC_CLOUD_URL)
+    response = requests.get(uri, data=data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
     results = json.loads(response.text)
 
     game_ids_dict = {}
@@ -81,10 +78,7 @@ def update_previous_results():
             "lang": "painless",
         })
 
-
-        uri = '{}3x3prediction/prediction/{}{}'.format(test_elastic_url, game_id, '/_update')
-
-        response = requests.post(uri, data=json_data, auth=(test_user, test_pwd), headers={'content-type': 'application/json'})
+        response = requests.post(uri, data=json_data, auth=(ELASTIC_CLOUD_URL, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
 
         results = json.loads(response.text)
         logging.info("Elastic update results: ")
