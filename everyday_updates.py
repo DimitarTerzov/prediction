@@ -78,7 +78,7 @@ def update_previous_results():
             "lang": "painless",
         })
 
-        response = requests.post(uri, data=json_data, auth=(ELASTIC_CLOUD_URL, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
+        response = requests.post(uri, data=json_data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
 
         results = json.loads(response.text)
         logging.info("Elastic update results: ")
