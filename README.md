@@ -1,3 +1,37 @@
+
+# Script to make new predictions for FIBA 3x3 Events and update old ones
+
+The script makes new prediction every day and updates the old predictions twice for hour.
+
+## How does it work
+
+There are created two Cron jobs in the Cron tab which executes two scripts.
+
+`everyday_predictions.py` make predictions for 92 days ahead, based on data
+from 365 days in the past. 
+
+`everyday_updates.py` updates the predictions from the past week.
+
+### Change the schedule
+
+Update the crontab, type:
+```
+crontab -e
+```
+and edit the Cron jobs.
+
+### To run predictions manually
+```
+cd seedion/
+python3 everyday_predictions.py
+```
+
+### To run updates manually
+```
+cd seedion/
+python3 everyday_updates.py
+```
+
 # A Survey of Learning Models for Predicting the Outcome of Basketball Match-Ups
 
 This README outlines the machine learning approach taken to
