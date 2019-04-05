@@ -1,0 +1,9 @@
+sql_server: sql-server-url
+sql_database: database-name
+sql_server_port: port
+sql_user: user-id
+sql_pwd: password
+
+elastic_cloud_user: elastic-cloud-user-id
+elastic_cloud_pwd: elastic-cloud-password
+elastic_cloud_url: elastic-cloud-url
