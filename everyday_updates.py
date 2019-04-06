@@ -33,11 +33,11 @@ def update_previous_results():
     print("***********Update Prections {}******".format(today))
 
     data = json.dumps({
-        "size": 100,
         "query": {
             "bool": {
-                "must": [
-                    {"match": {"actual_winner" : "Not played yet"}}
+                "should": [
+                    {"match": {"actual_winner.keyword": ""}},
+                    {"match": {"actual_winner": "Not played yet"}}
                 ],
                 "filter": {
                     "range": {
