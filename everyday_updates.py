@@ -33,6 +33,7 @@ def update_previous_results():
     print("***********Update Prections {}******".format(today))
 
     data = json.dumps({
+        "size": 100,
         "query": {
             "bool": {
                 "should": [
