@@ -33,7 +33,7 @@ def update_previous_results():
     print("***********Update Prections {}******".format(today))
 
     data = json.dumps({
-        "size": 1000,
+        "size": 100,
         "query": {
             "bool": {
                 "should": [
@@ -75,7 +75,7 @@ def update_previous_results():
         logging.info("game_id: {} actual_winner: {} prediction_correct: {}".format(game_id, actual_winner, prediction_correct))
 
         json_data = json.dumps({
-            "script": "ctx._source.actual_winner = '%s'; ctx._source.prediction_correct = '%s';" % (actual_winner.replace("'","\\'").replace('"', '\\"'), str(prediction_correct).lower()),
+            "script": "ctx._source.actual_winner = '%s'; ctx._source.prediction_correct = '%s';" % (actual_winner.replace("'","\\\\'"), str(prediction_correct).lower()),
             "lang": "painless",
         })
 
