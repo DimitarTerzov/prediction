@@ -33,7 +33,7 @@ def update_previous_results():
     print("***********Update Prections {}******".format(today))
 
     data = json.dumps({
-        "size": 100,
+        "size": 1000,
         "query": {
             "bool": {
                 "should": [
@@ -71,7 +71,7 @@ def update_previous_results():
 
         uri = '{}3x3prediction/prediction/{}{}'.format(ELASTIC_CLOUD_URL, game_id, '/_update')
 
-        prediction_correct = actual_winner == game_ids_dict[game_id]
+        prediction_correct = actual_winner.lower() == game_ids_dict[game_id].lower()
         logging.info("game_id: {} actual_winner: {} prediction_correct: {}".format(game_id, actual_winner, prediction_correct))
 
         json_data = json.dumps({
