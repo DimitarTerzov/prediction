@@ -74,10 +74,14 @@ def update_previous_results():
         prediction_correct = actual_winner.lower() == game_ids_dict[game_id].lower()
         logging.info("game_id: {} actual_winner: {} prediction_correct: {}".format(game_id, actual_winner, prediction_correct))
 
-        json_data = json.dumps({
-            "script": "ctx._source.actual_winner = '%s'; ctx._source.prediction_correct = '%s';" % (actual_winner.replace("'","\\'"), str(prediction_correct).lower()),
-            "lang": "painless",
-        })
+        json_data = json.dumps(
+            {
+                "doc" : {
+                    "actual_winner" : actual_winner,
+                    "prediction_correct": prediction_correct
+                }
+            }
+        )
 
         response = requests.post(uri, data=json_data, auth=(ELASTIC_CLOUD_USER, ELASTIC_CLOUD_PWD), headers={'content-type': 'application/json'})
 
