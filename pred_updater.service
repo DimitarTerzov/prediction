@@ -1,0 +1,12 @@
+[Unit]
+Description=3x3 Games Prediction Service
+
+[Service]
+WorkingDirectory=/home/ubuntu/seedion/
+User=ubuntu
+Type=idle
+Restart=on-failure
+ExecStart=/usr/local/bin/pipenv run ../../../../../../../../usr/bin/python3 /home/ubuntu/seedion/PredictionUpdater.py
+
+[Install]
+WantedBy=multi-user.target

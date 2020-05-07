@@ -1,0 +1,39 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "a1a50d0d9db7e569a9abf84d5a3bc4a1c0c6bec18a8f2556864b49118c8c079c"
+        },
+        "pipfile-spec": 1,
+        "requires": {},
+        "sources": [
+            {
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "elasticsearch": {
+            "version": "==6.2.0"
+        },
+        "numpy": {
+            "version": "==1.14.2"
+        },
+        "pyodbc": {
+            "version": "==4.0.23"
+        },
+        "scikit-learn": {
+            "version": "==0.19.1"
+        },
+        "scipy": {
+            "version": "==1.0.1"
+        },
+        "sklearn": {
+            "version": "==0.0"
+        },
+        "urllib3": {
+            "version": "==1.22"
+        }
+    },
+    "develop": {}
+}
