@@ -270,10 +270,7 @@ def get_team_features(teamName, date=datetime.now(), days_before=365, data=None,
         queryAll = "select * from %s where EventStartDate > ? and EventStartDate < ? and (GameTeamNameHome = ? or GameTeamNameAway = ?)" % DB
         data = pd.read_sql(queryAll, cxn, params=[startDate, date, teamName.encode('utf-16le'), teamName.encode('utf-16le')])
         data.set_index(['GameId', 'PlayerId'])
-        #data = data.drop_duplicates(['PlayerId'])
 
-    #print(data)
-    #print(game_id)
     thisSeason = data['EventSeason'].max()
     teamTotalWins = data[teamName == data['GameTeamNameWinner']]['GameId'].nunique()
 
@@ -286,20 +283,14 @@ def get_team_features(teamName, date=datetime.now(), days_before=365, data=None,
         teamTournamentsPlayed = 0
     else:
 
-        teamTotalWinsThisSeason = data[(teamName == data['GameTeamNameWinner']) & (thisSeason == data['EventSeason'])]['GameId'].nunique()
-        teamTotalLosesThisSeason = data[(teamName == data['GameTeamNameLoser']) & (thisSeason == data['EventSeason'])]['GameId'].nunique()
-        teamTournamentsPlayedThisSeason = data[((teamName == data['GameTeamNameHome']) | (teamName == data['GameTeamNameAway'])) & (thisSeason == data['EventSeason'])]['EventName'].nunique()
-        teamTournamentsPlayed = data[(teamName == data['GameTeamNameHome']) | (teamName == data['GameTeamNameAway'])]['EventName'].nunique()
-
-    #averagePointsPerWinGame = (data[(teamName == data['GameTeamNameWinner']) & (teamName == data['GameTeamNameHome'])]['GameHomeTeamPoints'].mean() + \
-    #    data[(teamName == data['GameTeamNameWinner']) & (teamName == data['GameTeamNameAway'])]['GameAwayTeamPoints'].mean()) / 2
-    #print('averagePointsPerWin: ', averagePointsPerWinGame)
-
-    #averagePointsPerLoseGame = (data[(teamName == data['GameTeamNameLoser']) & (teamName == data['GameTeamNameHome'])]['GameHomeTeamPoints'].mean() + \
-    #    data[(teamName == data['GameTeamNameLoser']) & (teamName == data['GameTeamNameAway'])]['GameAwayTeamPoints'].mean()) / 2
-    #print('averagePointsPerLose: ', averagePointsPerLoseGame)
-
-    #averageWinsPerTournament = data[teamName == 'GameTeamNameWinner']
+        teamTotalWinsThisSeason = data[
+            (teamName == data['GameTeamNameWinner']) & (thisSeason == data['EventSeason'])]['GameId'].nunique()
+        teamTotalLosesThisSeason = data[
+            (teamName == data['GameTeamNameLoser']) & (thisSeason == data['EventSeason'])]['GameId'].nunique()
+        teamTournamentsPlayedThisSeason = data[
+            ((teamName == data['GameTeamNameHome']) | (teamName == data['GameTeamNameAway'])) & (thisSeason == data['EventSeason'])]['EventName'].nunique()
+        teamTournamentsPlayed = data[
+            (teamName == data['GameTeamNameHome']) | (teamName == data['GameTeamNameAway'])]['EventName'].nunique()
 
     if game_id is None:
         last_date = data[(teamName == data['TeamName'])]['EventStartDate'].max()
@@ -309,17 +300,15 @@ def get_team_features(teamName, date=datetime.now(), days_before=365, data=None,
     else:
         gameQuery = "select * from %s where GameId = ? and TeamName = ?" % DB
         game = pd.read_sql(gameQuery, cxn, params=[game_id, teamName.encode('utf-16')])
-        #print("***************")
-        #print(game)
-        #print("***************")
         teamPlayerIds = game['PlayerId'].unique()
-        #print(teamPlayerIds)
 
         last_game_data = game
 
     print('\nteamName: ', teamName)
 
-    teamPlayers = last_game_data[last_game_data['PlayerId'].isin(teamPlayerIds)].drop_duplicates(['PlayerId'])[['PlayerId', 'PlayerFirstName', 'PlayerLastName', 'PlayerRankingPoints']]
+    teamPlayers = last_game_data[
+        last_game_data['PlayerId'].isin(teamPlayerIds)].drop_duplicates(['PlayerId'])[
+            ['PlayerId', 'PlayerFirstName', 'PlayerLastName', 'PlayerRankingPoints']]
     print("\nPlayers: ")
     print(teamPlayers)
 
@@ -336,7 +325,9 @@ def get_team_features(teamName, date=datetime.now(), days_before=365, data=None,
     print('averageRankingPoints: ', averageRankingPoints)
     print('========================================================================================================')
 
-    return np.nan_to_num(np.asarray([teamTotalWins, teamTotalLoses, teamTotalWinsThisSeason, teamTotalLosesThisSeason, teamTournamentsPlayed, averageRankingPoints]))
+    return np.nan_to_num(np.asarray(
+        [teamTotalWins, teamTotalLoses, teamTotalWinsThisSeason,
+         teamTotalLosesThisSeason, teamTournamentsPlayed, averageRankingPoints]))
 
 def get_future_data(date=datetime.now(), end_date=None):
 
