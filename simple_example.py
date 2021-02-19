@@ -32,11 +32,10 @@ sys.excepthook = handler
 
 def get_match_data():
 
-    res = requests.get('https://bwf.pass-consulting.com/api/Tournament/44A9F3CE-A822-49C8-A58A-BF165D73CB64/Draw/1/Match?token=7cb1c07a4dd1d13c9545629f51a377fd')
+    res = requests.get('https://bwf-stage.pass-consulting.com/api/v1/custom/matches_rankings?limit=100&params=start_date%3D%272019-10-20%27%2Cend_date%3D%272020-08-20%27&token=7cb1c07a4dd1d13c9545629f51a377fd')
     res = res.json()
-    results = res['Result']['ResponseTournamentMatch']
-    results = json.dumps(results)
-    df = pd.read_json(results)
+    res = json.dumps(res)
+    df = pd.read_json(res)
     df = df[['idTournamentMatch', 'matchTime', 'team1Player1MemberId', 'team1Player1FirstName', 'team1Player1LastName',
              'team2Player1MemberId', 'team2Player1FirstName', 'team2Player1LastName', 'winner']]
 
@@ -413,10 +412,10 @@ def output_to_csv(data):
 
 
 if __name__ == '__main__':
-    #match_results = get_match_data()
-    #print(match_results)
+    match_results = get_match_data()
+    print(match_results)
     #players_ranking_points = get_ranking_points()
     #print(players_ranking_points)
 
-    start_prediction(_XGB_CLASSIFIER)
+    # start_prediction(_XGB_CLASSIFIER)
 
